@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { getReceiverId } from '../lib/receiver';
+import { makeReceiverId } from '../lib/receiver';
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
-  const receiverId = getReceiverId();
+  const receiverId = makeReceiverId();
   return (
     <div className={styles.container}>
       <Head>
