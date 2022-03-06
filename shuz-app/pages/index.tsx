@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import QRCode from 'react-qr-code';
-import { Send } from '../components/send';
+import { SendForm } from '../components/send-form';
 import { makeReceiverId } from '../lib/receiver';
 import styles from '../styles/Home.module.css';
 
@@ -32,7 +32,7 @@ const Home: NextPage = () => {
 
         <section>
           <h2>Send</h2>
-          <Send />
+          <SendForm />
         </section>
         
       </main>
