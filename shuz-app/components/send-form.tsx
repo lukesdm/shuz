@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QrReader } from 'react-qr-reader';
+import { OnResultFunction, QrReader } from 'react-qr-reader';
 
 // export class SendForm extends React.Component {
 
@@ -15,12 +15,8 @@ import { QrReader } from 'react-qr-reader';
 //         </label>
 //         <input type="button" value="Send (start QR capture)" name="start-send" />
 //         <QrReader
-//           onResult={(result, error) => {
-//             if (!!result) {
-//               setData(result.text);
-//             }
-//           }}
-//         />
+//           onResult= {onQrRead}
+//           constraints = {{}} />
 //         <label>ID</label>
 //         <input type="submit" value="Send (really) " />
 //       </form>
@@ -28,22 +24,35 @@ import { QrReader } from 'react-qr-reader';
 //   }
 // }
 
+function sendMessage(sender: string, receiverId: string, message: string) {
+  console.log(`Sending message: '${message}' from ${sender} to ${receiverId}`);
+}
+
+
 export function SendForm() {
-  const [data, setData] = useState('No result');
+  const [message, setMessage] = useState('my message');
+
+  const onQrRead: OnResultFunction = (result, error) => {
+    if (!!result) {
+      const receiverId = result.getText();
+      sendMessage("test sender", receiverId, message);
+    }
+  
+    if (!!error) {
+      // console.info(error);
+    }
+  }
 
   return (
-    <>
+    <form>
+      <label>
+        Message:
+        <input type="text" name="message" onChange={e => setMessage(e.target.value)} />
+      </label>
+      <input type="button" value="Send (start QR capture)" name="start-send" />
       <QrReader
-        onResult={(result, error) => {
-          if (!!result) {
-            setData(result.getText());
-          }
-
-          if (!!error) {
-            console.info(error);
-          }
-        } } constraints = {{}} />
-      <p>{data}</p>
-    </>
+        onResult= {onQrRead}
+        constraints = {{}} />
+    </form>
   );
 };
