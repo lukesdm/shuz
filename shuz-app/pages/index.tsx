@@ -8,7 +8,7 @@ import styles from '../styles/Home.module.css';
 
 
 
-const Home: NextPage = ({ receiverId }) => {
+const Home: NextPage = ({ receiverId }) => { // passing receiverId in here a TS syntax error, but works OK at runtime.
   console.log(`receiver id gen'd = ${receiverId}`);
   return (
     <div className={styles.container}>
@@ -24,7 +24,8 @@ const Home: NextPage = ({ receiverId }) => {
         </h1>
 
         <p className={styles.description}>
-          (TODO: How to use)
+          <i>{`What's your email? How do you spell that? Send me the link.`}</i><br />
+          {`Quickly share messages - type your message, hit send, and scan the recipient's QR code.`}
         </p>
 
         <section>
