@@ -12,16 +12,8 @@ function handleGet(
         res.status(400).json(null);
         return;
     }
-    
-    // Needed this to unquote the string, but don't seem to need it any more.
-    // try {
-    //     receiverId = JSON.parse(receiverId) as string;
-    // } catch {
-    //     res.status(400).json(null);
-    //     return;
-    // }
 
-    const nextMessage = getNextMessage(receiverId);
+    const nextMessage = getNextMessage(receiverId) ?? {};
 
     console.log(`get message for '${receiverId}' returned: ${JSON.stringify(nextMessage)}`);
 
