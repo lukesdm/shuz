@@ -9,7 +9,7 @@ export type Message = {
     receiverId: ReceiverId;
     
     // Message contents
-    message: string;
+    content: string;
 }
 
 export const store = new Map<ReceiverId, Message[]>();

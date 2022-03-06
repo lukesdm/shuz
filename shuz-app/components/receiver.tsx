@@ -12,12 +12,12 @@ let message: Message | null = null;
 export function Receiver(props: { receiverId: string }) {  
     const { data, error } = useSWR<Message,Error>(`/api/message?receiverId=${props.receiverId}`, fetcher, { refreshInterval: 1000 });
 
-    if (data?.message) {
+    if (data?.content) {
         message = data;
     }
 
     if (message) {
-        return <p>{message.sender}: {message.message}</p>
+        return <p>{message.sender}: {message.content}</p>
     } else {
         return null;
     }

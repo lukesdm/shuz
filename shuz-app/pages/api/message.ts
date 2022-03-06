@@ -15,7 +15,7 @@ function handleGet(
 
     const nextMessage = getNextMessage(receiverId) ?? {};
 
-    console.log(`get message for '${receiverId}' returned: ${JSON.stringify(nextMessage)}`);
+    // console.log(`get message for '${receiverId}' returned: ${JSON.stringify(nextMessage)}`);
 
     res.status(200).json(nextMessage);
 }
@@ -26,7 +26,7 @@ function handlePost(
     res: NextApiResponse
 ) {
     const message: Message = JSON.parse(req.body);
-    if (!message.receiverId || !message.sender || !message.message) {
+    if (!message.receiverId || !message.sender || !message.content) {
         res.status(400).json(null);
         return;
     }
