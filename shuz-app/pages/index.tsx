@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { QRCode } from '../components/qrcode';
+import QRCode from 'react-qr-code';
 import { makeReceiverId } from '../lib/receiver';
 import styles from '../styles/Home.module.css';
 
