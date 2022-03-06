@@ -3,6 +3,9 @@ import { OnResultFunction, QrReader } from 'react-qr-reader';
 
 function sendMessage(sender: string, receiverId: string, message: string) {
   console.log(`Sending message: '${message}' from ${sender} to ${receiverId}`);
+  
+  // Fire and forget for now. Should put some error handling etc. around this.
+  fetch('/api/message', { method: 'POST', body: JSON.stringify({ sender, receiverId, message })});
 }
 
 export function SendForm() {
