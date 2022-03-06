@@ -10,6 +10,7 @@ function sendMessage(sender: string, receiverId: string, content: string) {
 
 export function SendForm() {
   const [content, setContent] = useState('');
+  const [sender, setSender] = useState('');
   const [receiverId, setReceiverId] = useState('');
   const [showQrReader, setShowQrReader] = useState(false);
   const [messageSent, setMessageSent] = useState(false);
@@ -17,14 +18,14 @@ export function SendForm() {
   useEffect(() => {
     const canSendMessage = showQrReader && receiverId !== '' && content !== '';
     if (canSendMessage) {
-      sendMessage("Testface", receiverId, content);
+      sendMessage(sender, receiverId, content);
       
       setShowQrReader(false);
       setReceiverId('');
       setContent('');
       setMessageSent(true);
     }
-  }, [showQrReader, receiverId, content]);
+  }, [showQrReader, receiverId, content, sender]);
 
   const onQrRead: OnResultFunction = (result, error) => {
     if (!!result) {
@@ -44,6 +45,10 @@ export function SendForm() {
       <label>
         Message:
         <input type="text" name="content" onChange={e => setContent(e.target.value)} />
+      </label>
+      <label>
+        From:
+        <input type="text" name="sender" onChange={e => setSender(e.target.value)} />
       </label>
       <input type="button" value="Send" name="start-send" onClick={onSendClick} />
       {showQrReader && <h3>Scan recipient&apos;s QR code</h3>}
