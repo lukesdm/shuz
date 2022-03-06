@@ -5,11 +5,19 @@ import { Message } from '../lib/store';
 
 const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
 
+// Hacky mutable state. Should only change client-side, but should refactor.
+// Would be bad if ever used server-side.
+let message: Message | null = null;
+
 export function Receiver(props: { receiverId: string }) {  
     const { data, error } = useSWR<Message,Error>(`/api/message?receiverId=${props.receiverId}`, fetcher, { refreshInterval: 1000 });
 
     if (data?.message) {
-        return <p>{data.sender}: {data.message}</p>
+        message = data;
+    }
+
+    if (message) {
+        return <p>{message.sender}: {message.message}</p>
     } else {
         return null;
     }
