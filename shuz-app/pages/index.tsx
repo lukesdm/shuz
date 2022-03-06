@@ -1,7 +1,9 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { QRCode } from '../components/qrcode';
 import { makeReceiverId } from '../lib/receiver';
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css';
+
 
 const Home: NextPage = () => {
   const receiverId = makeReceiverId();
@@ -24,8 +26,7 @@ const Home: NextPage = () => {
 
         <section>
           <h2>Receive</h2>
-          <p>...</p>
-          <p>{receiverId}</p>
+          <QRCode value={receiverId} />
         </section>
 
         <section>
