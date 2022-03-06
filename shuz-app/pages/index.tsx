@@ -1,8 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { getReceiverId } from '../lib/receiver';
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
+  const receiverId = getReceiverId();
   return (
     <div className={styles.container}>
       <Head>
@@ -23,6 +25,7 @@ const Home: NextPage = () => {
         <section>
           <h2>Receive</h2>
           <p>...</p>
+          <p>{receiverId}</p>
         </section>
 
         <section>
