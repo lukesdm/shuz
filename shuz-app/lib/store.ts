@@ -12,6 +12,14 @@ export type Message = {
     message: string;
 }
 
-const store = new Map<ReceiverId, Message[]>();
+export const store = new Map<ReceiverId, Message[]>();
 
-export { store }
+export function getNextMessage(receiverId: ReceiverId): Message | null {
+    const receiverMessages = store.get(receiverId);
+    
+    if (!receiverMessages || receiverMessages.length === 0) {
+        return null;
+    }
+
+    return receiverMessages.shift()!;
+}

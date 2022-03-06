@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { store, Message } from '../../lib/store';
+import { store, Message, getNextMessage } from '../../lib/store';
 
 // Pull latest message for the given receiver
 function handleGet(
@@ -7,25 +7,25 @@ function handleGet(
     res: NextApiResponse
 ) {
     let { receiverId } = req.query;
+    
     if (typeof receiverId !== 'string') {
         res.status(400).json(null);
         return;
     }
-    try {
-    receiverId = JSON.parse(receiverId) as string;
-    } catch {
-        res.status(400).json(null);
-        return;
-    }
+    
+    // Needed this to unquote the string, but don't seem to need it any more.
+    // try {
+    //     receiverId = JSON.parse(receiverId) as string;
+    // } catch {
+    //     res.status(400).json(null);
+    //     return;
+    // }
 
-    const receiverMessages = store.get(receiverId);
-    if (!receiverMessages || receiverMessages.length === 0) {
-        res.status(200).json({});
-        return;
-    }
-    const nextMessage = receiverMessages.shift();
+    const nextMessage = getNextMessage(receiverId);
 
-    res.status(200).json(nextMessage);   
+    console.log(`get message for '${receiverId}' returned: ${JSON.stringify(nextMessage)}`);
+
+    res.status(200).json(nextMessage);
 }
 
 // Pushes message to receiver's queue
