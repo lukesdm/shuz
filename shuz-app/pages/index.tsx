@@ -8,7 +8,7 @@ import styles from '../styles/Home.module.css';
 
 
 
-const Home: NextPage = ({ receiverId }) => { // passing receiverId in here a TS syntax error, but works OK at runtime.
+const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some weird type stuff.
   console.log(`receiver id gen'd = ${receiverId}`);
   return (
     <div className={styles.container}>
