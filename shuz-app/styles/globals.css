@@ -6,7 +6,10 @@
   overflow-wrap: break-word;
   font-size: 1.2rem;
   font-weight: 700;
-  color: #6301ff;
+}
+
+.message-received {
+  text-align: left;
 }
 
 main {

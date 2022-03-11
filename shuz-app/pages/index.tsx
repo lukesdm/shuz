@@ -46,7 +46,7 @@ const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some w
         { (mode === 'Receive') ?
           <>
             <div className='qr-container'>
-              <QRCode value={receiverId} size={400} />
+              
             </div>
             <Receiver receiverId={receiverId}/>
           </> :
