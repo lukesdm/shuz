@@ -68,10 +68,10 @@ export function SendForm() {
         <input type="button" value="Send" name="start-send" onClick={onSendClick} />
       </> }
       
-      <h3 style={{
+      <p className='notification' style={{
         transition: notification ? "all 1.0s": "",
         opacity: notification ? 1.0 : 0.0 
-      }}>{notification}</h3>
+      }}>{notification}</p>
       
     </form>
   );
