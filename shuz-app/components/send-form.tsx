@@ -59,7 +59,8 @@ export function SendForm() {
       { status === "WaitingForText" && <>
         <label>
           Message:
-          <input type="text" name="content" onChange={e => setContent(e.target.value)} />
+          {/* <input type="text" name="content" onChange={e => setContent(e.target.value)} /> */}
+          <textarea name="content" onChange={e => setContent(e.target.value)} />
         </label>
         <label>
           From:
