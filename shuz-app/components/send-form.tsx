@@ -10,30 +10,31 @@ function sendMessage(sender: string, receiverId: string, content: string) {
 
 type Status = 'WaitingForText' | 'WaitingForQR' | 'HasQR' | 'MessageSent';
 
+type Notification = 'Message sent!' | null;
+
 export function SendForm() {
   const [content, setContent] = useState('');
   const [sender, setSender] = useState('');
   const [receiverId, setReceiverId] = useState('');
   const [status, setStatus] = useState('WaitingForText' as Status);
-  const [notify, setNotify] = useState(false);
+  const [notification, setNotification] = useState(null as Notification);
 
   useEffect(() => {
-    // const canSendMessage = showQrReader && receiverId !== '' && content !== '';
     switch (status) {
       case 'WaitingForText': break;
       case 'WaitingForQR':
-        setNotify(false);
+        setNotification(null);
         break;
       case 'HasQR':
         sendMessage(sender, receiverId, content);
         setStatus("MessageSent");
         break;
       case 'MessageSent':
-        setNotify(true);
+        setNotification('Message sent!');
         setStatus("WaitingForText");
         break;
     }
-  }, [status, notify, receiverId, content, sender]);
+  }, [status, notification, receiverId, content, sender]);
 
   const onQrRead: OnResultFunction = (result, error) => {
     if (!!result) {
@@ -53,7 +54,7 @@ export function SendForm() {
     <form onSubmit={e => e.preventDefault()}>
       { status === "WaitingForQR" && <>
         {/* <h3>Scan recipient&apos;s QR code</h3> */}
-        <QrReader videoStyle={{ height: '50vh', position: 'static' }} videoContainerStyle = {{ paddingTop: '', position: '' }} onResult= {onQrRead} constraints = {{}} />
+        <QrReader videoStyle={{ height: '50vh', position: 'static' }} videoContainerStyle = {{ paddingTop: '', position: '' }} onResult= {onQrRead} constraints = {{ facingMode: { ideal: 'environment' } }} />
       </> }
       { status === "WaitingForText" && <>
         <label>
@@ -68,9 +69,9 @@ export function SendForm() {
       </> }
       
       <h3 style={{
-        transition: notify ? "all 1.0s": "",
-        opacity: notify ? 1.0 : 0.0 
-      }}> {notify ? <span>Message sent!</span> : null } </h3>
+        transition: notification ? "all 1.0s": "",
+        opacity: notification ? 1.0 : 0.0 
+      }}>{notification}</h3>
       
     </form>
   );

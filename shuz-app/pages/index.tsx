@@ -55,11 +55,11 @@ const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some w
           </>
         }
       
+      <p></p>
       </main>
 
       <footer className='container'>
-          <p>© Luke McQuade 2022</p>
-          <p><a href="#">About (TODO)</a></p>
+          <p>© <a href="https://github.com/lukesdm">Luke McQuade</a> 2022</p>
       </footer>
     </div>
   )
