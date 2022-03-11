@@ -51,17 +51,22 @@ export function SendForm() {
 
   return (
     <form onSubmit={e => e.preventDefault()}>
-      <label>
-        Message:
-        <input type="text" name="content" onChange={e => setContent(e.target.value)} />
-      </label>
-      <label>
-        From:
-        <input type="text" name="sender" onChange={e => setSender(e.target.value)} />
-      </label>
-      <input type="button" value="Send" name="start-send" onClick={onSendClick} />
-      {status === "WaitingForQR" && <h3>Scan recipient&apos;s QR code</h3>}
-      {status === "WaitingForQR" && <QrReader onResult= {onQrRead} constraints = {{}} />}
+      { status === "WaitingForQR" && <>
+        <h3>Scan recipient&apos;s QR code</h3>
+        <QrReader onResult= {onQrRead} constraints = {{}} />
+      </> }
+      { status === "WaitingForText" && <>
+        <label>
+          Message:
+          <input type="text" name="content" onChange={e => setContent(e.target.value)} />
+        </label>
+        <label>
+          From:
+          <input type="text" name="sender" onChange={e => setSender(e.target.value)} />
+        </label>
+        <input type="button" value="Send" name="start-send" onClick={onSendClick} />
+      </> }
+      
       <h3 style={{
         transition: notify ? "all 1.0s": "",
         opacity: notify ? 1.0 : 0.0 

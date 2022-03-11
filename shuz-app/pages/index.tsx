@@ -11,8 +11,6 @@ type Mode = 'Receive' | 'Send';
 
 const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some weird type stuff.
   const [mode, setMode] = useState('Receive' as Mode);
-
-  
   
   console.log(`receiver id gen'd = ${receiverId}`);
   return (
@@ -23,38 +21,43 @@ const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some w
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          shuz.app
-        </h1>
+      <header className='container'>
+        <hgroup>
+          <h1>shuz.app</h1>
+          <h2><i>{`What's your email? How do you spell that? Send me the link.`}</i></h2>
+        </hgroup>
+      </header>
 
+      <main className='container'>
         <p className={styles.description}>
-          <i>{`What's your email? How do you spell that? Send me the link.`}</i><br />
           {`Quickly share messages - type your message, hit send, and scan the recipient's QR code.`}
         </p>
 
-        <input type="checkbox" name='mode' role={ 'switch' } onChange={e => setMode(e.target.checked ? 'Send' : 'Receive')} />
+        <label>
+          Receive
+          <input type="checkbox" className='mode-selector' name='mode' role={ 'switch' } onChange={e => setMode(e.target.checked ? 'Send' : 'Receive')} />
+          Send
+        </label>
 
-        
+        <p>This is an early stage prototype, DO NOT use for sensitive data.</p>
+
         { (mode === 'Receive') ?
           <>
-            <h1>Receive</h1>
+            <h3>Receive</h3>
             <QRCode value={receiverId} />
             <Receiver receiverId={receiverId}/>
           </> :
           <>
-            <h1>Send</h1>
             <SendForm />
           </>
         }
+      
       </main>
 
-      <footer className={styles.footer}>
+      <footer className='container'>
           <p>© Luke McQuade 2022</p>
-          <a href="#">About (TODO)</a>
-          <p>This is an early stage prototype, DO NOT use for sensitive data.</p>
+          <p><a href="#">About (TODO)</a></p>
       </footer>
-      <div id="hidden-receiver-id" hidden>{receiverId}</div>
     </div>
   )
 }
