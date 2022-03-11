@@ -1,7 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
-import QRCode from 'react-qr-code';
 import { Receiver } from '../components/receiver';
 import { SendForm } from '../components/send-form';
 import { makeReceiverId } from '../lib/receiver';
@@ -24,12 +23,8 @@ const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some w
       <main className='container'>
         <hgroup>
           <h1>shuz.app</h1>
-          <h2><i>{`What's your email? How do you spell that? Send me the link.`}</i></h2>
+          <h2>{`Share with ease`}</h2>
         </hgroup>
-        <p className={ styles.description }>
-          {`Quickly share messages - type your message, hit send, and scan the recipient's QR code.`}
-        </p>
-        
         <p><em>This is an early stage prototype, DO NOT use for sensitive data.</em></p>
 
         {/* TODO: Refactor into component + don't use article */}
