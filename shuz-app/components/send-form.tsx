@@ -8,28 +8,37 @@ function sendMessage(sender: string, receiverId: string, content: string) {
   fetch('/api/message', { method: 'POST', body: JSON.stringify({ sender, receiverId, content })});
 }
 
+type Status = 'WaitingForText' | 'WaitingForQR' | 'HasQR' | 'MessageSent';
+
 export function SendForm() {
   const [content, setContent] = useState('');
   const [sender, setSender] = useState('');
   const [receiverId, setReceiverId] = useState('');
-  const [showQrReader, setShowQrReader] = useState(false);
-  const [messageSent, setMessageSent] = useState(false);
+  const [status, setStatus] = useState('WaitingForText' as Status);
+  const [notify, setNotify] = useState(false);
 
   useEffect(() => {
-    const canSendMessage = showQrReader && receiverId !== '' && content !== '';
-    if (canSendMessage) {
-      sendMessage(sender, receiverId, content);
-      
-      setShowQrReader(false);
-      setReceiverId('');
-      setContent('');
-      setMessageSent(true);
+    // const canSendMessage = showQrReader && receiverId !== '' && content !== '';
+    switch (status) {
+      case 'WaitingForText': break;
+      case 'WaitingForQR':
+        setNotify(false);
+        break;
+      case 'HasQR':
+        sendMessage(sender, receiverId, content);
+        setStatus("MessageSent");
+        break;
+      case 'MessageSent':
+        setNotify(true);
+        setStatus("WaitingForText");
+        break;
     }
-  }, [showQrReader, receiverId, content, sender]);
+  }, [status, notify, receiverId, content, sender]);
 
   const onQrRead: OnResultFunction = (result, error) => {
     if (!!result) {
       setReceiverId(result.getText());
+      setStatus("HasQR");
     }
     if (!!error) {
       // ignore these errors for now.
@@ -37,7 +46,7 @@ export function SendForm() {
   }
 
   const onSendClick = () => {
-    setShowQrReader(true);
+    setStatus("WaitingForQR");
   }
 
   return (
@@ -51,9 +60,13 @@ export function SendForm() {
         <input type="text" name="sender" onChange={e => setSender(e.target.value)} />
       </label>
       <input type="button" value="Send" name="start-send" onClick={onSendClick} />
-      {showQrReader && <h3>Scan recipient&apos;s QR code</h3>}
-      {showQrReader && <QrReader onResult= {onQrRead} constraints = {{}} />}
-      {messageSent && <h3>Message sent!</h3>}
+      {status === "WaitingForQR" && <h3>Scan recipient&apos;s QR code</h3>}
+      {status === "WaitingForQR" && <QrReader onResult= {onQrRead} constraints = {{}} />}
+      <h3 style={{
+        transition: notify ? "all 1.0s": "",
+        opacity: notify ? 1.0 : 0.0 
+      }}> {notify ? <span>Message sent!</span> : null } </h3>
+      
     </form>
   );
 };
