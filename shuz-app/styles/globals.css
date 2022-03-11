@@ -1,3 +1,8 @@
 .mode-selector {
   --switch-background-color: var(--switch-checked-background-color);
 }
+
+main {
+  min-height: 95vh;
+  max-height: 95vh;
+}

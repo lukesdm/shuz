@@ -52,8 +52,8 @@ export function SendForm() {
   return (
     <form onSubmit={e => e.preventDefault()}>
       { status === "WaitingForQR" && <>
-        <h3>Scan recipient&apos;s QR code</h3>
-        <QrReader onResult= {onQrRead} constraints = {{}} />
+        {/* <h3>Scan recipient&apos;s QR code</h3> */}
+        <QrReader videoStyle={{ height: '50vh', position: 'static' }} videoContainerStyle = {{ paddingTop: '', position: '' }} onResult= {onQrRead} constraints = {{}} />
       </> }
       { status === "WaitingForText" && <>
         <label>

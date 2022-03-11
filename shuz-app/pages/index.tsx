@@ -21,30 +21,33 @@ const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some w
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className='container'>
+      <main className='container'>
         <hgroup>
           <h1>shuz.app</h1>
           <h2><i>{`What's your email? How do you spell that? Send me the link.`}</i></h2>
         </hgroup>
-      </header>
-
-      <main className='container'>
-        <p className={styles.description}>
+        <p className={ styles.description }>
           {`Quickly share messages - type your message, hit send, and scan the recipient's QR code.`}
         </p>
+        
+        <p><em>This is an early stage prototype, DO NOT use for sensitive data.</em></p>
 
+        {/* TODO: Refactor into component + don't use article */}
+        <div className='mode-selector-container'><article>
         <label>
-          Receive
+          Receive &nbsp;
           <input type="checkbox" className='mode-selector' name='mode' role={ 'switch' } onChange={e => setMode(e.target.checked ? 'Send' : 'Receive')} />
-          Send
+          &nbsp; Send
         </label>
+        </article></div>
 
-        <p>This is an early stage prototype, DO NOT use for sensitive data.</p>
+        
 
         { (mode === 'Receive') ?
           <>
-            <h3>Receive</h3>
-            <QRCode value={receiverId} />
+            <div className='qr-container'>
+              <QRCode value={receiverId} size={400} />
+            </div>
             <Receiver receiverId={receiverId}/>
           </> :
           <>
