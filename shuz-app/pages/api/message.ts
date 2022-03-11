@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { store, Message, getNextMessage } from '../../lib/store';
+import { sendMessage, Message, getNextMessage } from '../../lib/store';
 
 // Pull latest message for the given receiver
-function handleGet(
+async function handleGet(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
@@ -13,7 +13,7 @@ function handleGet(
         return;
     }
 
-    const nextMessage = getNextMessage(receiverId) ?? {};
+    const nextMessage = await getNextMessage(receiverId) ?? {};
 
     // console.log(`get message for '${receiverId}' returned: ${JSON.stringify(nextMessage)}`);
 
@@ -21,7 +21,7 @@ function handleGet(
 }
 
 // Pushes message to receiver's queue
-function handlePost(
+async function handlePost(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
@@ -31,15 +31,14 @@ function handlePost(
         return;
     }
 
-    const receiverMessages = store.get(message.receiverId) ?? store.set(message.receiverId, []).get(message.receiverId)!;
-    receiverMessages.push(message);
+    await sendMessage(message);
 
     console.log(message);
 
     res.status(200).json(null);
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

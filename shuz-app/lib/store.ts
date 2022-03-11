@@ -14,27 +14,14 @@ export type Message = {
     content: string;
 }
 
-function redisTest() {
-    (async () => {
-        const client = createClient();
-        await client.connect();
-        await client.set('abc', 123);
-        const value = await client.get('abc');
-        console.log(value);
-    })();
+export async function sendMessage(message: Message) {
+    const client = createClient();
+    await client.connect();
+    client.rPush(message.receiverId, JSON.stringify(message));
 }
 
-export const store = new Map<ReceiverId, Message[]>();
-
-export function getNextMessage(receiverId: ReceiverId): Message | null {
-    
-    redisTest();
-    
-    const receiverMessages = store.get(receiverId);
-    
-    if (!receiverMessages || receiverMessages.length === 0) {
-        return null;
-    }
-
-    return receiverMessages.shift()!;
+export async function getNextMessage(receiverId: ReceiverId): Promise<Message | null> {
+    const client = createClient();
+    await client.connect();
+    return JSON.parse(await client.lPop(receiverId) ?? '{}');
 }
