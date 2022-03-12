@@ -26,5 +26,5 @@ export async function getMessage(receiverId: ReceiverId): Promise<Message | null
     
     // COULDDO: use getDel if/when upstash implements it.
     const message = JSON.parse(await client.getSet(receiverId, JSON.stringify({})) ?? '{}');
-    return message;
+    return message.content ? message : null;
 }
