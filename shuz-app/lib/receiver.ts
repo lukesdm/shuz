@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomBytes } from 'crypto';
 
 export function makeReceiverId() {
-    const receiver_id = uuidv4();
-    return receiver_id;
+    const buf = randomBytes(18);
+    return buf.toString('base64');
 }
