@@ -29,8 +29,6 @@ const handlePost: Handler = async (req, res) => {
 
     await sendMessage(message);
 
-    console.log(message);
-
     return { code: 200, data: null }
 }
 
