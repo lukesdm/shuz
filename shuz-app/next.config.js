@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    MY_CONN: 'test-connection',
+    REDIS_URL: 'redis://localhost:6379',
   }
 }
 

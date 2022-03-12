@@ -15,13 +15,13 @@ export type Message = {
 }
 
 export async function sendMessage(message: Message) {
-    const client = createClient();
+    const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
     client.rPush(message.receiverId, JSON.stringify(message));
 }
 
 export async function getNextMessage(receiverId: ReceiverId): Promise<Message | null> {
-    const client = createClient();
+    const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
     return JSON.parse(await client.lPop(receiverId) ?? '{}');
 }

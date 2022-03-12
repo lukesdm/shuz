@@ -1,52 +1,44 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { sendMessage, Message, getNextMessage } from '../../lib/store';
 
-// Pull latest message for the given receiver
-async function handleGet(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
+type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<{ code: number, data: object | null }>
+
+const handleGet: Handler = async (req, res) => {
     let { receiverId } = req.query;
     
     if (typeof receiverId !== 'string') {
-        res.status(400).json(null);
-        return;
+        return { code: 400, data: null };
     }
 
-    const nextMessage = await getNextMessage(receiverId) ?? {};
+    let nextMessage = null;
+    try {
+        nextMessage = await getNextMessage(receiverId) ?? {};
+    } catch (e) {
+        console.error(e);
+        return { code: 500, data: {} }
+    }
 
-    // console.log(`get message for '${receiverId}' returned: ${JSON.stringify(nextMessage)}`);
-
-    res.status(200).json(nextMessage);
+    return { code: 200, data: nextMessage };
 }
 
-// Pushes message to receiver's queue
-async function handlePost(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
+const handlePost: Handler = async (req, res) => {
     const message: Message = JSON.parse(req.body);
     if (!message.receiverId || !message.sender || !message.content) {
-        res.status(400).json(null);
-        return;
+        return { code: 400, data: null };
     }
 
     await sendMessage(message);
 
     console.log(message);
 
-    res.status(200).json(null);
+    return { code: 200, data: null }
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    if (req.method == 'GET') {
-        handleGet(req, res);
-    } else if (req.method === 'POST') {
-        handlePost(req, res);
-    } else {
-        res.status(405).json(null);
-    }
+    const result = req.method === 'GET' ? await handleGet(req, res) : req.method === 'POST' ? await handlePost(req, res) : { code: 405, data: null };
+    
+    res.status(result.code).json(result.data);
 }
