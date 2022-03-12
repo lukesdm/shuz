@@ -8,7 +8,7 @@ import styles from '../styles/Home.module.css';
 
 type Mode = 'Receive' | 'Send';
 
-const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some weird type stuff.
+const Home: NextPage = ({ receiverId }:any) => { // use `any` here to avoid some weird type stuff.
   const [mode, setMode] = useState('Receive' as Mode);
   
   console.log(`receiver id gen'd = ${receiverId}`);

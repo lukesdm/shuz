@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
 
+function logError(context: string, err?: Error) {
+  console.error(`${context} ${err}`);
+}
+
 function sendMessage(sender: string, receiverId: string, content: string) {
   console.log(`Sending message: '${content}' from ${sender} to ${receiverId}`);
   
-  // Fire and forget for now. Should put some error handling etc. around this.
-  fetch('/api/message', { method: 'POST', body: JSON.stringify({ sender, receiverId, content })});
+  // TODO: User-friendly error notification. (complicated by react)
+  fetch('/api/message', { method: 'POST', body: JSON.stringify({ sender, receiverId, content })})
+  .then(res => {
+    if (!res.ok) {
+      logError('Problem sending message.', new Error(`API responded with code ${res.status}`))
+    }
+  })
+  .catch(err => {
+    logError('Problem sending message.', err);
+  });
 }
 
 type Status = 'WaitingForText' | 'WaitingForQR' | 'HasQR' | 'MessageSent';

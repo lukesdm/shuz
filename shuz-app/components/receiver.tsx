@@ -23,8 +23,7 @@ export function Receiver(props: { receiverId: string }) {
         <article className='message-received'>
             <p>{message.sender}:</p>
             <p className='notification'>{message.content}</p>
-            <button onClick={() => router.reload()}>Again?</button>
+            <button onClick={() => router.reload()}>Receive another?</button>
         </article>
     </>
-    
 }
