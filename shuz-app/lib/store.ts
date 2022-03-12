@@ -24,7 +24,7 @@ export async function getMessage(receiverId: ReceiverId): Promise<Message | null
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
     
-    const message = JSON.parse(await client.get(receiverId) ?? '{}');
-    await client.del(receiverId); // TODO: use getDel when upstash implements it.
+    // COULDDO: use getDel if/when upstash implements it.
+    const message = JSON.parse(await client.getSet(receiverId, JSON.stringify({})) ?? '{}');
     return message;
 }
