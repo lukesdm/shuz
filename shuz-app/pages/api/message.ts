@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { sendMessage, Message, getNextMessage } from '../../lib/store';
+import { sendMessage, Message, getMessage } from '../../lib/store';
 
 type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<{ code: number, data: object | null }>
 
@@ -10,15 +10,15 @@ const handleGet: Handler = async (req, res) => {
         return { code: 400, data: null };
     }
 
-    let nextMessage = null;
+    let message = null;
     try {
-        nextMessage = await getNextMessage(receiverId) ?? {};
+        message = await getMessage(receiverId) ?? {};
     } catch (e) {
         console.error(e);
         return { code: 500, data: {} }
     }
 
-    return { code: 200, data: nextMessage };
+    return { code: 200, data: message };
 }
 
 const handlePost: Handler = async (req, res) => {

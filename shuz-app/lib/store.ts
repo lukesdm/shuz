@@ -17,11 +17,11 @@ export type Message = {
 export async function sendMessage(message: Message) {
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
-    client.rPush(message.receiverId, JSON.stringify(message));
+    client.set(message.receiverId, JSON.stringify(message), { EX: 30 });
 }
 
-export async function getNextMessage(receiverId: ReceiverId): Promise<Message | null> {
+export async function getMessage(receiverId: ReceiverId): Promise<Message | null> {
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
-    return JSON.parse(await client.lPop(receiverId) ?? '{}');
+    return JSON.parse(await client.get(receiverId) ?? '{}');
 }
