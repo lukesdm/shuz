@@ -23,34 +23,31 @@ const Home: NextPage = ({ receiverId }:any) => { // use any here to avoid some w
       <main className='container'>
         <hgroup>
           <h1>shuz.app</h1>
-          <h2>{`Share with ease`}</h2>
+          <h2>{`Share info with ease.`}</h2>
         </hgroup>
         <p><em>This is an early stage prototype, DO NOT use for sensitive data.</em></p>
 
-        {/* TODO: Refactor into component + don't use article */}
-        <div className='mode-selector-container'><article>
-        <label>
-          Receive &nbsp;
-          <input type="checkbox" className='mode-selector' name='mode' role={ 'switch' } onChange={e => setMode(e.target.checked ? 'Send' : 'Receive')} />
-          &nbsp; Send
-        </label>
-        </article></div>
-
-        
+        {/* SHOULDDO: refactor into component */}
+        <div className='mode-selector'>
+          <article> {/* just using `article` here because of its pico styles */}
+            <div className='grid'>
+            <button className={ mode === 'Receive' ? '' : 'outline' } onClick = {e => setMode('Receive')}>
+              Receive
+            </button>
+            <button className={ mode === 'Send' ? '' : 'outline' } onClick = {e => setMode('Send')}>
+              Send
+            </button>
+            </div>
+            <p>{ mode === 'Receive' ? `Show the QR code below to the sender.` : `Type your message, hit Send below, and scan the recipient's QR code.`}</p>
+          </article>
+        </div>
 
         { (mode === 'Receive') ?
-          <>
-            <div className='qr-container'>
-              
-            </div>
-            <Receiver receiverId={receiverId}/>
-          </> :
-          <>
-            <SendForm />
-          </>
+          <Receiver receiverId={receiverId}/> :
+          <SendForm />
         }
       
-      <p></p>
+      <p></p> { /* spacing */ }
       </main>
 
       <footer className='container'>

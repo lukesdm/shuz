@@ -1,5 +1,5 @@
-.mode-selector {
-  --switch-background-color: var(--switch-checked-background-color);
+.mode-selector .grid {
+  grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }
 
 .notification {
@@ -19,4 +19,8 @@ main {
 
 form {
   text-align: left;
+}
+
+article p:last-child {
+  margin-bottom: 0;
 }
