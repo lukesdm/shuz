@@ -23,5 +23,5 @@ export async function sendMessage(message: Message) {
 export async function getMessage(receiverId: ReceiverId): Promise<Message | null> {
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
-    return JSON.parse(await client.get(receiverId) ?? '{}');
+    return JSON.parse(await client.getDel(receiverId) ?? '{}');
 }
