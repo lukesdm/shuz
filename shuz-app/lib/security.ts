@@ -1,7 +1,7 @@
 // Danger zone.
 
 const ALGO_TYPE = 'RSA-OAEP';
-const ALGO_MODULUS_LENGTH = 4096; // TODO: Try with 2048 as QR is hard to capture.
+const ALGO_MODULUS_LENGTH = 2048;
 const ALGO_PUBLIC_EXPONENT = new Uint8Array([1, 0 ,1]);
 const ALGO_HASH = 'SHA-256';
 const ALGO_KEY_FORMAT = 'jwk';
