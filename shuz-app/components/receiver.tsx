@@ -9,9 +9,6 @@ import { ReceiverSecurityContext } from '../lib/security';
 
 const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
 
-// Hacky mutable state. Should refactor this.
-let message: Message | null = null;
-
 function Receiver_() {
     const serverSide = typeof window === 'undefined';
     if (serverSide) {
@@ -19,6 +16,7 @@ function Receiver_() {
     }
 
     const [ securityContext, setSecurityContext ] = useState(new ReceiverSecurityContext());
+    const [ messageContent, setMessageContent ] = useState<string>();
 
     const receiverId = securityContext.receiverId;
     const urlParams = new URLSearchParams({ receiverId });
@@ -36,17 +34,16 @@ function Receiver_() {
     useEffect(() => {
         (async () => {
             if (data?.content) {
-                message = data;
-                message.content = await securityContext.decrypt(message.content);
-                console.log(message.content);
+                const newContent = await securityContext.decrypt(data.content);
+                setMessageContent(newContent);
             }
         })();
     }, [ securityContext, data ]);
 
     const qr = receiverId ? <QRCode value={receiverId} size={300} /> : <p>Loading...</p>
-    return !message ? qr  : <>
+    return !messageContent ? qr : <>
         <article className='message-received'>
-            <p className='notification'>{message.content}</p>
+            <p className='notification'>{messageContent}</p>
             <button onClick={() => router.reload()}>Receive another?</button>
         </article>
     </>
