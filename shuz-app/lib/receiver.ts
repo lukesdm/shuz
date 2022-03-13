@@ -63,20 +63,15 @@ export class ReceiverSecurityContext {
 
     /**
      * Decrypt text string.
-     * @param ciphertext Encrypted string encoded as base64
+     * @param ciphertextBase64 Encrypted string encoded as base64
      */
-    async decrypt(ciphertext: string): Promise<string> {
+    async decrypt(ciphertextBase64: string): Promise<string> {
         this.#checkState();
-
-        console.log(`0. Attempting to decrypt ${ciphertext}`);
         
-        const data = new TextEncoder().encode(ciphertext);
-
-        console.log(`1. In array ready for decryption.`);
+        // Source: https://stackoverflow.com/a/41106346/1492741
+        const data = Uint8Array.from(window.atob(ciphertextBase64), c => c.charCodeAt(0));
 
         const decrypted: ArrayBuffer = await crypto.subtle.decrypt({ name: ALGO_TYPE }, this.#keyPair!.privateKey!, data);
-
-        console.log('2. Decrypted.'); 
         
         return new TextDecoder().decode(decrypted); // TODO: Check - do we need to specify UTF-8 here for cross-device compatibility?
     }
@@ -111,8 +106,8 @@ export class SenderSecurityContext {
         // Encrypt. type info of result seems to be missing, runtime says it's ArrayBuffer.
         const result: ArrayBuffer = await crypto.subtle.encrypt({ name: ALGO_TYPE }, publicKey, data);
 
+        // Source: https://stackoverflow.com/a/11562550/1492741
         const resultBase64 = window.btoa(String.fromCharCode(...new Uint8Array(result)));
-        console.log('Encrypted as ' + resultBase64)
 
         return resultBase64;
     }

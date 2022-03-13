@@ -7,7 +7,7 @@ function newTest<T>(name: string, expected: T, actual: T) {
 }
 
 const roundTripEncryptionTest = async () => {
-    const messagePlain = 'Hello there!'; // TODO: Try with emoji.
+    const messagePlain = 'Hello there! 👍';
     const rsc = new ReceiverSecurityContext();
     await rsc.init();
 
@@ -19,7 +19,6 @@ const roundTripEncryptionTest = async () => {
     console.log(messageEncrypted);
 
     const messageDecrypted = await rsc.decrypt(messageEncrypted);
-    console.log(messageDecrypted);
     
     return newTest('Round-trip encryption test', messagePlain, messageDecrypted);
 }
