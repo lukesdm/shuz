@@ -7,10 +7,10 @@ function logError(context: string, err?: Error) {
   console.error(`${context} ${err}`);
 }
 
-async function sendMessage(sender: string, receiverId: string, content: string) {
+async function sendMessage(receiverId: string, content: string) {
   const encryptedContent = await new SenderSecurityContext().encrypt(receiverId, content);
 
-  console.log(`Sending message. From '${sender}' to '${receiverId}'. Content: '${content}', encrypted: '${encryptedContent}') `);
+  console.log(`Sending message. To '${receiverId}'. Content: '${content}', encrypted: '${encryptedContent}') `);
   
   // TODO: User-friendly error notification. (complicated by react)
   const body: Message = {
@@ -38,7 +38,6 @@ type Notification = 'Message sent!' | null;
 
 export function SendForm() {
   const [content, setContent] = useState('');
-  const [sender, setSender] = useState('');
   const [receiverId, setReceiverId] = useState('');
   const [status, setStatus] = useState('WaitingForText' as Status);
   const [notification, setNotification] = useState(null as Notification);
@@ -50,7 +49,7 @@ export function SendForm() {
         setNotification(null);
         break;
       case 'HasQR':
-        sendMessage(sender, receiverId, content);
+        sendMessage(receiverId, content);
         setStatus("MessageSent");
         break;
       case 'MessageSent':
@@ -58,7 +57,7 @@ export function SendForm() {
         setStatus("WaitingForText");
         break;
     }
-  }, [status, notification, receiverId, content, sender]);
+  }, [status, notification, receiverId, content]);
 
   const onQrRead: OnResultFunction = (result, error) => {
     if (!!result) {
