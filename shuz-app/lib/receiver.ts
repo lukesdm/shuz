@@ -6,13 +6,23 @@ export async function makeReceiverId() {
     }
 
     const pubKey = await makePublicKey();
-    
-    return JSON.stringify(pubKey);
+
+    return pubKey;
 }
 
 async function exportPublicKey(keyPair: CryptoKeyPair) {
     // 'RAW' export doesn't work with RSA, so just use JWK for now. 
-    return crypto.subtle.exportKey('jwk', keyPair.publicKey!);
+    // This looks something like:
+    // {"alg":"RSA-OAEP-256","e":"AQAB","ext":true,"key_ops":["encrypt"],"kty":"RSA","n":"0mEdRu...ghuRRlt0"}
+    // Assuming we only support this algo, we can treat 'n' as the differentiator. 
+    const rsaJwk = await crypto.subtle.exportKey('jwk', keyPair.publicKey!);
+
+    if (!rsaJwk.n) {
+        // Most likely cause is platform not supporting this.
+        throw new Error('Key format invalid.'); 
+    }
+
+    return rsaJwk.n;
 }
 
 async function makePublicKey() {
