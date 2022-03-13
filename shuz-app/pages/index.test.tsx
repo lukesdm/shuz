@@ -27,18 +27,25 @@ const roundTripEncryptionTest = async () => {
 type Test = ReturnType<typeof newTest>;
 
 const HomeTest: NextPage = () => {
-    const [tests, setTests] = useState<Test[]> ([]);
+    const [tests, setTests] = useState<Test[]>([]);
+    const [err, setErr] = useState<Error>();
 
     useEffect(() => {
         (async () => {
-            setTests([
-                newTest('Test test', 1, 1),
-                await roundTripEncryptionTest(),
-            ])
+            try {
+                setTests([
+                    newTest('Test test', 1, 1),
+                    await roundTripEncryptionTest(),
+                ]);
+            } catch (newErr) {
+                console.error(newErr);
+                setErr(newErr as Error);
+            }
         })();
     }, []);
     return <div>
         { tests.map((t, i) => <p key={i}>{t.name}: expected: {t.expected}, actual: {t.actual}, pass: {t.pass.toString()}</p> ) }
+        { err ? <p>{err.toString()}</p> : null }
     </div>
 }
 

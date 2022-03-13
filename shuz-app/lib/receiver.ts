@@ -68,14 +68,16 @@ export class ReceiverSecurityContext {
     async decrypt(ciphertext: string): Promise<string> {
         this.#checkState();
 
-        console.log(`Attempting to decrypt ${ciphertext}`);
+        console.log(`0. Attempting to decrypt ${ciphertext}`);
         
-        // const data = new TextEncoder().encode(ciphertext);
-        const data = atob(ciphertext) as unknown as ArrayBuffer;
+        const data = new TextEncoder().encode(ciphertext);
 
-        console.log('Message received:')
+        console.log(`1. In array ready for decryption.`);
 
         const decrypted: ArrayBuffer = await crypto.subtle.decrypt({ name: ALGO_TYPE }, this.#keyPair!.privateKey!, data);
+
+        console.log('2. Decrypted.'); 
+        
         return new TextDecoder().decode(decrypted); // TODO: Check - do we need to specify UTF-8 here for cross-device compatibility?
     }
 }
