@@ -17,15 +17,19 @@ async function sendMessage(sender: string, receiverId: string, content: string) 
     receiverId,
     content: encryptedContent,
   };
-  fetch('/api/message', { method: 'POST', body: JSON.stringify(body)})
-  .then(res => {
-    if (!res.ok) {
-      logError('Problem sending message.', new Error(`API responded with code ${res.status}`))
-    }
-  })
-  .catch(err => {
-    logError('Problem sending message.', err);
-  });
+
+  let response = null, error = null;
+  try {
+    response = await fetch('/api/message', { method: 'POST', body: JSON.stringify(body)});
+  } catch (err) {
+    error = err;
+  }
+
+  if (response && !response.ok) {
+    logError('Problem sending message.', new Error(`API responded with code ${response.status}`));
+  } else if (error) {
+    logError('Problem sending message.', error as Error);
+  }
 }
 
 type Status = 'WaitingForText' | 'WaitingForQR' | 'HasQR' | 'MessageSent';
