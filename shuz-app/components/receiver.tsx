@@ -5,7 +5,7 @@ import { Message } from '../lib/store';
 import QRCode from 'react-qr-code';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { ReceiverSecurityContext } from '../lib/receiver';
+import { ReceiverSecurityContext } from '../lib/security';
 
 const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
 

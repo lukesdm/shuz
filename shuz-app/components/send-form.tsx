@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
-import { SenderSecurityContext } from '../lib/receiver';
+import { SenderSecurityContext } from '../lib/security';
 import { Message } from '../lib/store';
 
 function logError(context: string, err?: Error) {

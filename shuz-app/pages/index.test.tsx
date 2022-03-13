@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { ReceiverSecurityContext, SenderSecurityContext } from "../lib/receiver";
+import { ReceiverSecurityContext, SenderSecurityContext } from "../lib/security";
 
 function newTest<T>(name: string, expected: T, actual: T) {
     return { name, expected, actual, pass: actual === expected };
