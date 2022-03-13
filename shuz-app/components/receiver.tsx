@@ -52,7 +52,6 @@ function Receiver_() {
     const qr = receiverId ? <QRCode value={receiverId} size={300} /> : <p>Loading...</p>
     return !message ? qr  : <>
         <article className='message-received'>
-            <p>{message.sender}:</p>
             <p className='notification'>{message.content}</p>
             <button onClick={() => router.reload()}>Receive another?</button>
         </article>

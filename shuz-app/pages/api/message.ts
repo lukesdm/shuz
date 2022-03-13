@@ -26,7 +26,7 @@ const handleGet: Handler = async (req, res) => {
 
 const handlePost: Handler = async (req, res) => {
     const message: Message = JSON.parse(req.body);
-    if (!message.receiverId || !message.sender || !message.content) {
+    if (!message.receiverId || !message.content) {
         return { code: 400, data: null };
     }
 

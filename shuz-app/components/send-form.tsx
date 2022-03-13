@@ -14,7 +14,6 @@ async function sendMessage(sender: string, receiverId: string, content: string) 
   
   // TODO: User-friendly error notification. (complicated by react)
   const body: Message = {
-    sender,
     receiverId,
     content: encryptedContent,
   };
@@ -81,11 +80,7 @@ export function SendForm() {
         <label>
           Message:
           {/* <input type="text" name="content" onChange={e => setContent(e.target.value)} /> */}
-          <textarea name="content" onChange={e => setContent(e.target.value)} />
-        </label>
-        <label>
-          From:
-          <input type="text" name="sender" onChange={e => setSender(e.target.value)} />
+          <textarea name="content" rows={4} placeholder={"Your message...\n\n(From?)"} onChange={e => setContent(e.target.value)} />
         </label>
         <input type="button" value="Send" name="start-send" onClick={onSendClick} />
       </> }

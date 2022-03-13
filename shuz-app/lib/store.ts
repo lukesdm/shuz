@@ -4,9 +4,6 @@ import { createClient } from "redis";
 type ReceiverId = string;
 
 export type Message = {
-    // Name of the sender
-    sender: string;
-    
     // Receiver GUID
     receiverId: ReceiverId;
     
