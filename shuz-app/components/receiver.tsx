@@ -22,14 +22,7 @@ function Receiver_() {
     // const [ receiverId, setReceiverId ] = useState('');
     const [ securityContext, setSecurityContext ] = useState(new ReceiverSecurityContext());
 
-    useEffect(() => {
-        const newSecurityContext = new ReceiverSecurityContext();
-        (async () => {
-            await newSecurityContext.init();
-
-            setSecurityContext(newSecurityContext);
-        })();
-    }, []);
+    
 
     // console.log(`rending with receiverId ${receiverId}`);
 
@@ -38,9 +31,23 @@ function Receiver_() {
     const { data, error } = useSWR<Message,Error>(receiverId ? `/api/message?${urlParams}` : null, fetcher, { refreshInterval: 1000 });
     const router = useRouter();
 
-    if (data?.content) {
-        message = data;
-    }
+    useEffect(() => {
+        const newSecurityContext = new ReceiverSecurityContext();
+        (async () => {
+            await newSecurityContext.init();
+
+            setSecurityContext(newSecurityContext);
+        })();
+    }, []);
+    
+    useEffect(() => {
+        (async () => {
+            if (data?.content) {
+                message = data;
+                message.content = await securityContext.decrypt(message.content);
+            }
+        })();
+    }, [ securityContext, data ]);
 
     const qr = receiverId ? <QRCode value={receiverId} size={300} /> : <p>Loading...</p>
     return !message ? qr  : <>

@@ -60,6 +60,24 @@ export class ReceiverSecurityContext {
 
         return rsaJwk.n;
     }
+
+    /**
+     * Decrypt text string.
+     * @param ciphertext Encrypted string encoded as base64
+     */
+    async decrypt(ciphertext: string): Promise<string> {
+        this.#checkState();
+
+        console.log(`Attempting to decrypt ${ciphertext}`);
+        
+        // const data = new TextEncoder().encode(ciphertext);
+        const data = atob(ciphertext) as unknown as ArrayBuffer;
+
+        console.log('Message received:')
+
+        const decrypted: ArrayBuffer = await crypto.subtle.decrypt({ name: ALGO_TYPE }, this.#keyPair!.privateKey!, data);
+        return new TextDecoder().decode(decrypted); // TODO: Check - do we need to specify UTF-8 here for cross-device compatibility?
+    }
 }
 
 export class SenderSecurityContext {
