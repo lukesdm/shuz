@@ -1,10 +1,13 @@
 // Danger zone.
 
-const algo = {
-    name: 'RSA-OAEP',
-};
-
-const format = 'jwk';
+const ALGO_TYPE = 'RSA-OAEP';
+const ALGO_MODULUS_LENGTH = 4096; // TODO: Try with 2048 as QR is hard to capture.
+const ALGO_PUBLIC_EXPONENT = new Uint8Array([1, 0 ,1]);
+const ALGO_HASH = 'SHA-256';
+const ALGO_KEY_FORMAT = 'jwk';
+const ALGO_JWK_NAME = 'RSA-OAEP-256';
+const ALGO_JWK_E = 'AQAB';
+const ALGO_JWK_KTY = 'RSA';
 
 export class ReceiverSecurityContext {
     #keyPair: CryptoKeyPair | null = null;
@@ -29,15 +32,14 @@ export class ReceiverSecurityContext {
         }
     }
 
-    // TODO: Try with 2048 if QR is too fine-grained.
     async #generateKeyPair () {
         // RSA keypair generation. Source:
         //   https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey#rsa_key_pair_generation
         const keyPair = crypto.subtle.generateKey({
-            name: 'RSA-OAEP',
-            modulusLength: 4096,
-            publicExponent: new Uint8Array([1, 0 ,1]),
-            hash: 'SHA-256'
+            name: ALGO_TYPE,
+            modulusLength: ALGO_MODULUS_LENGTH,
+            publicExponent: ALGO_PUBLIC_EXPONENT,
+            hash: ALGO_HASH
         }, true, ['encrypt', 'decrypt']);
 
         return keyPair;
@@ -49,7 +51,7 @@ export class ReceiverSecurityContext {
         // This looks something like:
         // {"alg":"RSA-OAEP-256","e":"AQAB","ext":true,"key_ops":["encrypt"],"kty":"RSA","n":"0mEdRu...ghuRRlt0"}
         // Assuming we only support this algo, we can treat 'n' as the differentiator. 
-        const rsaJwk = await crypto.subtle.exportKey(format, this.#keyPair!.publicKey!);
+        const rsaJwk = await crypto.subtle.exportKey(ALGO_KEY_FORMAT, this.#keyPair!.publicKey!);
 
         if (!rsaJwk.n) {
             // Most likely cause is the platform not supporting this.
@@ -73,13 +75,13 @@ export class SenderSecurityContext {
     async encrypt(publicKeyText: string, plainText: string): Promise<string> {
 
         const options = {
-            alg: 'RSA-OAEP-256',
-            e: 'AQAB',
-            kty: 'RSA',
+            alg: ALGO_JWK_NAME,
+            e: ALGO_JWK_E,
+            kty: ALGO_JWK_KTY,
             n: publicKeyText,
         };
     
-        const publicKey = await crypto.subtle.importKey('jwk', options, { name: 'RSA-OAEP', hash: 'SHA-256' } , true, ['encrypt']);
+        const publicKey = await crypto.subtle.importKey(ALGO_KEY_FORMAT, options, { name: ALGO_TYPE, hash: ALGO_HASH } , true, ['encrypt']);
     
         // Based on: 
         // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#rsa-oaep_2
@@ -87,7 +89,7 @@ export class SenderSecurityContext {
         const data = new TextEncoder().encode(plainText);
 
         // Encrypt. type info of result seems to be missing, runtime says it's ArrayBuffer.
-        const result: ArrayBuffer = await crypto.subtle.encrypt(algo, publicKey, data);
+        const result: ArrayBuffer = await crypto.subtle.encrypt({ name: ALGO_TYPE }, publicKey, data);
 
         // This is client-side, so ignore node type error (COULDDO: Move into browser-only TS proj)
         // @ts-ignore
