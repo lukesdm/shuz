@@ -79,8 +79,7 @@ export function SendForm() {
       { status === "WaitingForText" && <>
         <label>
           Message:
-          {/* <input type="text" name="content" onChange={e => setContent(e.target.value)} /> */}
-          <textarea name="content" rows={4} placeholder={"Your message...\n\n(From?)"} onChange={e => setContent(e.target.value)} />
+          <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => setContent(e.target.value)} />
         </label>
         <input type="button" value="Send" name="start-send" onClick={onSendClick} />
       </> }

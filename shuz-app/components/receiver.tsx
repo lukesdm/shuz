@@ -13,18 +13,12 @@ const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(inp
 let message: Message | null = null;
 
 function Receiver_() {
-    // Verify code is running client-side, or it will break security guarantees.
     const serverSide = typeof window === 'undefined';
     if (serverSide) {
         throw new Error('This component should only ever be rendered client-side.');
     }
 
-    // const [ receiverId, setReceiverId ] = useState('');
     const [ securityContext, setSecurityContext ] = useState(new ReceiverSecurityContext());
-
-    
-
-    // console.log(`rending with receiverId ${receiverId}`);
 
     const receiverId = securityContext.receiverId;
     const urlParams = new URLSearchParams({ receiverId });
@@ -35,7 +29,6 @@ function Receiver_() {
         const newSecurityContext = new ReceiverSecurityContext();
         (async () => {
             await newSecurityContext.init();
-
             setSecurityContext(newSecurityContext);
         })();
     }, []);
@@ -45,6 +38,7 @@ function Receiver_() {
             if (data?.content) {
                 message = data;
                 message.content = await securityContext.decrypt(message.content);
+                console.log(message.content);
             }
         })();
     }, [ securityContext, data ]);
@@ -61,4 +55,4 @@ function Receiver_() {
 export const Receiver = dynamic(
     () => Promise.resolve(Receiver_),
     { ssr: false }
-  )
+  );
