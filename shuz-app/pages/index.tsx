@@ -1,9 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Receiver } from '../components/receiver';
 import { SendForm } from '../components/send-form';
-import { makeReceiverId } from '../lib/receiver';
 import styles from '../styles/Home.module.css';
 
 type Mode = 'Receive' | 'Send';
