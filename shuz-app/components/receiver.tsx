@@ -5,31 +5,36 @@ import { Message } from '../lib/store';
 import QRCode from 'react-qr-code';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { makeReceiverId } from '../lib/receiver';
+import { ReceiverSecurityContext } from '../lib/receiver';
 
 const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
 
 // Hacky mutable state. Should refactor this.
 let message: Message | null = null;
 
-function Receiver_() {  
+function Receiver_() {
     // Verify code is running client-side, or it will break security guarantees.
     const serverSide = typeof window === 'undefined';
     if (serverSide) {
         throw new Error('This component should only ever be rendered client-side.');
     }
 
-    const [ receiverId, setReceiverId ] = useState('');
+    // const [ receiverId, setReceiverId ] = useState('');
+    const [ securityContext, setSecurityContext ] = useState(new ReceiverSecurityContext());
 
     useEffect(() => {
+        const newSecurityContext = new ReceiverSecurityContext();
         (async () => {
-            setReceiverId(await makeReceiverId());   
+            await newSecurityContext.init();
+
+            setSecurityContext(newSecurityContext);
         })();
     }, []);
 
-    console.log(`rending with receiverId ${receiverId}`);
+    // console.log(`rending with receiverId ${receiverId}`);
 
-    const urlParams = new URLSearchParams({ receiverId: receiverId });
+    const receiverId = securityContext.receiverId;
+    const urlParams = new URLSearchParams({ receiverId });
     const { data, error } = useSWR<Message,Error>(receiverId ? `/api/message?${urlParams}` : null, fetcher, { refreshInterval: 1000 });
     const router = useRouter();
 
