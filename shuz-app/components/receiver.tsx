@@ -12,25 +12,32 @@ const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(inp
 // Hacky mutable state. Should refactor this.
 let message: Message | null = null;
 
-// Happens once, on page load. Otherwise, conflicts with SWR causing an infinite loop.
-const receiverId = makeReceiverId();
-
 function Receiver_() {  
     // Verify code is running client-side, or it will break security guarantees.
     const serverSide = typeof window === 'undefined';
     if (serverSide) {
         throw new Error('This component should only ever be rendered client-side.');
-    }  
+    }
+
+    const [ receiverId, setReceiverId ] = useState('');
+
+    useEffect(() => {
+        (async () => {
+            setReceiverId(await makeReceiverId());   
+        })();
+    }, []);
+
+    console.log(`rending with receiverId ${receiverId}`);
 
     const urlParams = new URLSearchParams({ receiverId: receiverId });
-    const { data, error } = useSWR<Message,Error>(`/api/message?${urlParams}`, fetcher, { refreshInterval: 1000 });
+    const { data, error } = useSWR<Message,Error>(receiverId ? `/api/message?${urlParams}` : null, fetcher, { refreshInterval: 1000 });
     const router = useRouter();
 
     if (data?.content) {
         message = data;
     }
 
-    return !message ? <QRCode value={receiverId} size={300} /> : <>
+    return !message ? receiverId && <QRCode value={receiverId} size={300} /> : <>
         <article className='message-received'>
             <p>{message.sender}:</p>
             <p className='notification'>{message.content}</p>
