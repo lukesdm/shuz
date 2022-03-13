@@ -111,9 +111,8 @@ export class SenderSecurityContext {
         // Encrypt. type info of result seems to be missing, runtime says it's ArrayBuffer.
         const result: ArrayBuffer = await crypto.subtle.encrypt({ name: ALGO_TYPE }, publicKey, data);
 
-        // This is client-side, so ignore node type error (COULDDO: Move into browser-only TS proj)
-        // @ts-ignore
-        const resultBase64 = btoa(result);
+        const resultBase64 = window.btoa(String.fromCharCode(...new Uint8Array(result)));
+        console.log('Encrypted as ' + resultBase64)
 
         return resultBase64;
     }
