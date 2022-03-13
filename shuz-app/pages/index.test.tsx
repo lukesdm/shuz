@@ -7,7 +7,7 @@ function newTest<T>(name: string, expected: T, actual: T) {
 }
 
 const roundTripEncryptionTest = async () => {
-    const messagePlain = 'Hello there! 👍';
+    const messagePlain = 'Hello there! 👍 коньяк';
     const rsc = new ReceiverSecurityContext();
     await rsc.init();
 
