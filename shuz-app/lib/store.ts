@@ -24,7 +24,13 @@ export async function getMessage(receiverId: ReceiverId): Promise<Message | null
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
     
-    // COULDDO: use getDel if/when upstash implements it.
-    const message = JSON.parse(await client.getSet(receiverId, JSON.stringify({})) ?? '{}');
+    // Hacky dequeue to somewhat avoid eventual consistency issues.
+    // Assumes no new message to same ID in short space of time (otherwise it might get lost).
+    // getDel (not yet in upstash) or getSet would be better if consistency were enabled.
+    const message = JSON.parse(await client.get(receiverId) ?? '{}');
+    if (message.content) {
+        await client.set(receiverId, JSON.stringify({}));
+    }
+    
     return message.content ? message : null;
 }
