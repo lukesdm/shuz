@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Receiver } from '../components/receiver';
 import { SendForm } from '../components/send-form';
 import { makeReceiverId } from '../lib/receiver';
@@ -8,10 +8,9 @@ import styles from '../styles/Home.module.css';
 
 type Mode = 'Receive' | 'Send';
 
-const Home: NextPage = ({ receiverId }:any) => { // use `any` here to avoid some weird type stuff.
+const Home: NextPage = () => {
   const [mode, setMode] = useState('Receive' as Mode);
   
-  console.log(`receiver id gen'd = ${receiverId}`);
   return (
     <div className={styles.container}>
       <Head>
@@ -43,7 +42,7 @@ const Home: NextPage = ({ receiverId }:any) => { // use `any` here to avoid some
         </div>
 
         { (mode === 'Receive') ?
-          <Receiver receiverId={receiverId}/> :
+          <Receiver /> :
           <SendForm />
         }
       
@@ -55,11 +54,6 @@ const Home: NextPage = ({ receiverId }:any) => { // use `any` here to avoid some
       </footer>
     </div>
   )
-}
-
-export async function getServerSideProps() {
-  const receiverId = makeReceiverId();
-  return { props: { receiverId }};
 }
 
 export default Home
