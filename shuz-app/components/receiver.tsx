@@ -22,7 +22,8 @@ function Receiver_() {
         throw new Error('This component should only ever be rendered client-side.');
     }  
 
-    const { data, error } = useSWR<Message,Error>(`/api/message?receiverId=${receiverId}`, fetcher, { refreshInterval: 1000 });
+    const urlParams = new URLSearchParams({ receiverId: receiverId });
+    const { data, error } = useSWR<Message,Error>(`/api/message?${urlParams}`, fetcher, { refreshInterval: 1000 });
     const router = useRouter();
 
     if (data?.content) {

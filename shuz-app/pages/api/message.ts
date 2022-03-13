@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { unescape } from 'querystring';
 import { sendMessage, Message, getMessage } from '../../lib/store';
 
 type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<{ code: number, data: object | null }>
@@ -14,7 +15,7 @@ const handleGet: Handler = async (req, res) => {
 
     let message = null;
     try {
-        message = await getMessage(receiverId) ?? {};
+        message = await getMessage(unescape(receiverId)) ?? {};
     } catch (e) {
         console.error(e);
         return { code: 500, data: {} }
