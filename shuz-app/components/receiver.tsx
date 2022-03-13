@@ -29,7 +29,7 @@ function Receiver_() {
         message = data;
     }
 
-    return !message ? <QRCode value={receiverId} size={400} /> : <>
+    return !message ? <QRCode value={receiverId} size={300} /> : <>
         <article className='message-received'>
             <p>{message.sender}:</p>
             <p className='notification'>{message.content}</p>
