@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
 import { SenderSecurityContext } from '../lib/receiver';
+import { Message } from '../lib/store';
 
 function logError(context: string, err?: Error) {
   console.error(`${context} ${err}`);
 }
 
-function sendMessage(sender: string, receiverId: string, content: string) {
-  console.log(`Sending message: '${content}' from ${sender} to ${receiverId}`);
+async function sendMessage(sender: string, receiverId: string, content: string) {
+  const encryptedContent = await new SenderSecurityContext().encrypt(receiverId, content);
 
-  const encryptedContent = encrypt(receiverId, content);
+  console.log(`Sending message. From '${sender}' to '${receiverId}'. Content: '${content}', encrypted: '${encryptedContent}') `);
   
   // TODO: User-friendly error notification. (complicated by react)
-  fetch('/api/message', { method: 'POST', body: JSON.stringify({ sender, receiverId, encryptedContent })})
+  const body: Message = {
+    sender,
+    receiverId,
+    content: encryptedContent,
+  };
+  fetch('/api/message', { method: 'POST', body: JSON.stringify(body)})
   .then(res => {
     if (!res.ok) {
       logError('Problem sending message.', new Error(`API responded with code ${res.status}`))

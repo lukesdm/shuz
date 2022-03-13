@@ -1,19 +1,11 @@
 // Danger zone.
 
 const algo = {
-    name: 'RSA-OAEP'
+    name: 'RSA-OAEP',
 };
 
 const format = 'jwk';
 
-// const options = {
-//     alg: 'RSA-OAEP-256',
-//     e: 'AQAB',
-//     ext: true,
-//     key_ops: ['encrypt'],
-//     kty: 'RSA',
-//     // n: { filled in by code }
-// };
 export class ReceiverSecurityContext {
     #keyPair: CryptoKeyPair | null = null;
     receiverId: string = '';
@@ -75,43 +67,32 @@ export class SenderSecurityContext {
         }
     }
 
-    async encrypt(publicKeyText: string, plainText: string) {
+    /**
+     * Encrypts the given text, with the provided public key (base64, 'n' param of an RSA-OAEP-256 JWK), into base64-encoded ciphertext.
+     */
+    async encrypt(publicKeyText: string, plainText: string): Promise<string> {
+
         const options = {
             alg: 'RSA-OAEP-256',
             e: 'AQAB',
-            ext: true, // may not need this
-            key_ops: ['encrypt'], // may not need this
             kty: 'RSA',
             n: publicKeyText,
         };
     
-        const publicKey = await crypto.subtle.importKey(
-            'jwk', options, algo, true, ['encrypt']);
+        const publicKey = await crypto.subtle.importKey('jwk', options, { name: 'RSA-OAEP', hash: 'SHA-256' } , true, ['encrypt']);
     
         // Based on: 
         // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#rsa-oaep_2
     
         const data = new TextEncoder().encode(plainText);
-        
-        return crypto.subtle.encrypt(algo, publicKey, data); // TODO: Encode this for transport.
+
+        // Encrypt. type info of result seems to be missing, runtime says it's ArrayBuffer.
+        const result: ArrayBuffer = await crypto.subtle.encrypt(algo, publicKey, data);
+
+        // This is client-side, so ignore node type error (COULDDO: Move into browser-only TS proj)
+        // @ts-ignore
+        const resultBase64 = btoa(result);
+
+        return resultBase64;
     }
 }
-
-// export class SenderSecurityContext {
-//     #publicKey: CryptoKey | null;
-
-//     constructor(publicKeyText) {
-//         crypto.subtle.importKey()
-//     }
-// }
-
-// async encrypt(plainText: string) {
-//     this.#checkState();
-
-//     // Guided by:
-//     // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#rsa-oaep_2
-
-//     const data = new TextEncoder().encode(plainText);
-    
-//     return crypto.subtle.encrypt(algo, this.#keyPair!.publicKey!, data);
-// }
