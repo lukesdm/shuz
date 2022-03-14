@@ -70,7 +70,7 @@ function formatSendResult(sendResult: SendResult | null): string {
 type ActionType = 'WaitForText' | 'WaitForQR' | 'HandleQR' | 'HandleSend';
 
 type Action = { type: 'WaitForText'; payload: string } // textbox contents updated
-  | { type: 'WaitForQR'; payload: null } // content already updated, nothing to pass.
+  | { type: 'WaitForQR'; } // content already updated, no payload needed.
   | { type: 'HandleQR'; payload: string } // QR code.
   | { type: 'HandleSend'; payload: SendResult };
 
@@ -136,7 +136,7 @@ export function SendForm() {
           Message:
           <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: e.target.value })} />
         </label>
-        <input type="button" value="Send" name="start-send" onClick={() => dispatch({ type: 'WaitForQR', payload: null })} />
+        <input type="button" value="Send" name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} />
       </> }
       
         {/* Don't wrap this in conditional otherwise animation breaks.
@@ -144,15 +144,15 @@ export function SendForm() {
         <p className='notification' style={{
           transition: state.sendResult ? "all 1.0s": "",
           opacity: state.sendResult ? 1.0 : 0.0 
-        }}>{formatSendResult(state.sendResult)}</p>
+        }}>{ state.lastAction === 'HandleSend' && formatSendResult(state.sendResult)}</p>
 
-        { state.sendResult instanceof SendError && <>
-          <button onClick={() => dispatch({ type: 'WaitForQR', payload: null })}>Try again</button>
+        { state.lastAction === 'HandleSend' && state.sendResult instanceof SendError && <>
+          <button onClick={() => dispatch({ type: 'WaitForQR' })}>Try again</button>
         </> }
 
-        { state.sendResult === 'OK' && <>
-          <button onClick={() => dispatch({ type: 'WaitForQR', payload: null })}>Send again?</button>
-          <button onClick={() => dispatch({ type: 'WaitForText', payload: state.content! })}>Send another?</button>
+        { state.lastAction === 'HandleSend' && state.sendResult === 'OK' && <>
+          <button onClick={() => dispatch({ type: 'WaitForQR' })}>Send again?</button>
+          <button onClick={() => dispatch({ type: 'WaitForText', payload: '' })}>Send another?</button>
         </>}
         
       
