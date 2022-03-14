@@ -2,6 +2,11 @@
   grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }
 
+/* Grid ignoring media query (always side-by-side where possible) */
+.ignore-mq.grid {
+  grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+}
+
 .notification {
   overflow-wrap: break-word;
   font-size: 1.2rem;

@@ -138,24 +138,19 @@ export function SendForm() {
         </label>
         <input type="button" value="Send" name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} />
       </> }
-      
-        {/* Don't wrap this in conditional otherwise animation breaks.
-              COULDDO: Find a nicer way to do it. */}
-        <p className='notification' style={{
-          transition: state.sendResult ? "all 1.0s": "",
-          opacity: state.sendResult ? 1.0 : 0.0 
-        }}>{ state.lastAction === 'HandleSend' && formatSendResult(state.sendResult)}</p>
 
-        { state.lastAction === 'HandleSend' && state.sendResult instanceof SendError && <>
+      { state.lastAction === 'HandleSend' && <>
+        <p className='notification'>{formatSendResult(state.sendResult)}</p>
+
+        { state.sendResult instanceof SendError && <>
           <button onClick={() => dispatch({ type: 'WaitForQR' })}>Try again</button>
         </> }
+        { state.sendResult === 'OK' && <div className='ignore-mq grid'>
+          <button onClick={() => dispatch({ type: 'WaitForQR' })}>Resend</button>
+          <button onClick={() => dispatch({ type: 'WaitForText', payload: '' })}>New message</button>
+        </div>}
+      </>}
 
-        { state.lastAction === 'HandleSend' && state.sendResult === 'OK' && <>
-          <button onClick={() => dispatch({ type: 'WaitForQR' })}>Send again?</button>
-          <button onClick={() => dispatch({ type: 'WaitForText', payload: '' })}>Send another?</button>
-        </>}
-        
-      
     </form>
   );
 };
