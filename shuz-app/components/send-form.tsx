@@ -6,18 +6,24 @@ import { Message } from '../lib/store';
 /**
  * An error making the web request.
  */
-class PostError extends Error {}
+class PostError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = 'PostError';
+  }
+}
 
 /**
  * An error during the sending process.
  */
-class SendError extends Error {}
+class SendError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = 'SendError';
+  }
+}
 
 type SendResult = 'OK' | SendError;
-
-function logError(context: string, err?: Error) {
-  console.error(`${context} ${err}`);
-}
 
 async function postMessage(receiverId: string, encryptedContent: string) {
   const body: Message = {
@@ -46,7 +52,8 @@ async function sendMessage(receiverId: string, content: string): Promise<SendRes
     } else {
       error = new SendError('Unexpected problem. Please report this to our team, and we will investigate it as soon as possible.');
     }
-    logError('Problem sending message.', err as Error);
+
+    // console.error(err);
   }
 
   return error ?? 'OK';

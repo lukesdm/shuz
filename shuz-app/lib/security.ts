@@ -12,7 +12,12 @@ const ALGO_JWK_KTY = 'RSA';
 /**
  * An error encrypting content. Usually caused by a malformed public key.
  */
-export class EncryptError extends Error {}
+export class EncryptError extends Error {
+    constructor() {
+        super();
+        this.name = 'EncryptError';
+    }
+}
 
 export class ReceiverSecurityContext {
     #keyPair: CryptoKeyPair | null = null;
