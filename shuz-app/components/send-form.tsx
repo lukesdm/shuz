@@ -145,6 +145,16 @@ export function SendForm() {
           transition: state.sendResult ? "all 1.0s": "",
           opacity: state.sendResult ? 1.0 : 0.0 
         }}>{formatSendResult(state.sendResult)}</p>
+
+        { state.sendResult instanceof SendError && <>
+          <button onClick={() => dispatch({ type: 'WaitForQR', payload: null })}>Try again</button>
+        </> }
+
+        { state.sendResult === 'OK' && <>
+          <button onClick={() => dispatch({ type: 'WaitForQR', payload: null })}>Send again?</button>
+          <button onClick={() => dispatch({ type: 'WaitForText', payload: state.content! })}>Send another?</button>
+        </>}
+        
       
     </form>
   );
