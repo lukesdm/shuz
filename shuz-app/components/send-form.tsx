@@ -57,6 +57,16 @@ async function sendMessage(receiverId: string, content: string): Promise<SendRes
   return error ?? 'OK';
 }
 
+function formatSendResult(sendResult: SendResult | null): string {
+  if (sendResult === 'OK') {
+    return 'Message sent successfully!';
+  } else if (sendResult instanceof SendError) {
+    return sendResult.message;
+  } else {
+    return '';
+  }
+}
+
 type ActionType = 'WaitForText' | 'WaitForQR' | 'HandleQR' | 'HandleSend';
 
 type Action = { type: 'WaitForText'; payload: string } // textbox contents updated
@@ -111,14 +121,14 @@ export function SendForm() {
       dispatch({ type: 'HandleQR', payload: result.getText() });
     }
     if (!!error) {
-      // ignore these errors for now.
+      // Ignore these errors for now.
+      // TODO: Look into what sort of errors might happen here. E.g. how are multiple QR codes handled?
     }
   }
 
   return (
     <form onSubmit={e => e.preventDefault()}>
       { state.lastAction === 'WaitForQR' && <>
-        {/* <h3>Scan recipient&apos;s QR code</h3> */}
         <QrReader videoStyle={{ height: '50vh', position: 'static' }} videoContainerStyle = {{ paddingTop: '', position: '' }} onResult={onQrRead} constraints = {{ facingMode: { ideal: 'environment' } }} />
       </> }
       { state.lastAction === 'WaitForText' && <>
@@ -129,10 +139,12 @@ export function SendForm() {
         <input type="button" value="Send" name="start-send" onClick={() => dispatch({ type: 'WaitForQR', payload: null })} />
       </> }
       
-      <p className='notification' style={{
-        transition: state.sendResult ? "all 1.0s": "",
-        opacity: state.sendResult ? 1.0 : 0.0 
-      }}>{`${state.sendResult}`}</p>
+        {/* Don't wrap this in conditional otherwise animation breaks.
+              COULDDO: Find a nicer way to do it. */}
+        <p className='notification' style={{
+          transition: state.sendResult ? "all 1.0s": "",
+          opacity: state.sendResult ? 1.0 : 0.0 
+        }}>{formatSendResult(state.sendResult)}</p>
       
     </form>
   );
