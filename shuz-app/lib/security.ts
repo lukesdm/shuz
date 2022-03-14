@@ -9,6 +9,11 @@ const ALGO_JWK_NAME = 'RSA-OAEP-256';
 const ALGO_JWK_E = 'AQAB';
 const ALGO_JWK_KTY = 'RSA';
 
+/**
+ * An error encrypting content. Usually caused by a malformed public key.
+ */
+export class EncryptError extends Error {}
+
 export class ReceiverSecurityContext {
     #keyPair: CryptoKeyPair | null = null;
     receiverId: string = '';
@@ -17,6 +22,8 @@ export class ReceiverSecurityContext {
         if (typeof window === 'undefined') {
             throw new Error("This should not be run outside a browser.");
         }
+
+        // TODO: Check for insecure context
     }
 
     async init() {
@@ -82,33 +89,43 @@ export class SenderSecurityContext {
         if (typeof window === 'undefined') {
             throw new Error("This should not be run outside a browser.");
         }
+
+        // TODO: Check for insecure context
     }
 
     /**
      * Encrypts the given text, with the provided public key (base64, 'n' param of an RSA-OAEP-256 JWK), into base64-encoded ciphertext.
+     *  @throws {EncryptError} when content can't be encrypted, usually because of a malformed public key.
      */
     async encrypt(publicKeyText: string, plainText: string): Promise<string> {
-
         const options = {
             alg: ALGO_JWK_NAME,
             e: ALGO_JWK_E,
             kty: ALGO_JWK_KTY,
             n: publicKeyText,
         };
-    
-        const publicKey = await crypto.subtle.importKey(ALGO_KEY_FORMAT, options, { name: ALGO_TYPE, hash: ALGO_HASH } , true, ['encrypt']);
-    
-        // Based on: 
-        // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#rsa-oaep_2
-    
-        const data = new TextEncoder().encode(plainText);
 
-        // Encrypt. type info of result seems to be missing, runtime says it's ArrayBuffer.
-        const result: ArrayBuffer = await crypto.subtle.encrypt({ name: ALGO_TYPE }, publicKey, data);
+        try {
+            const publicKey = await crypto.subtle.importKey(ALGO_KEY_FORMAT, options, { name: ALGO_TYPE, hash: ALGO_HASH } , true, ['encrypt']);
+        
+            // Based on: 
+            // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#rsa-oaep_2
+        
+            const data = new TextEncoder().encode(plainText);
 
-        // Source: https://stackoverflow.com/a/11562550/1492741
-        const resultBase64 = window.btoa(String.fromCharCode(...new Uint8Array(result)));
+            // Encrypt. type info of result seems to be missing, runtime says it's ArrayBuffer.
+            const result: ArrayBuffer = await crypto.subtle.encrypt({ name: ALGO_TYPE }, publicKey, data);
 
-        return resultBase64;
+            // Source: https://stackoverflow.com/a/11562550/1492741
+            const resultBase64 = window.btoa(String.fromCharCode(...new Uint8Array(result)));
+
+            return resultBase64;
+        } catch (err) {
+            if (err instanceof DOMException) {
+                throw new EncryptError();
+            } else {
+                throw err;
+            }
+        }
     }
 }

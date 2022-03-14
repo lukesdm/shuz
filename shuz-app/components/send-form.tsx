@@ -1,35 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
-import { SenderSecurityContext } from '../lib/security';
+import { EncryptError, SenderSecurityContext } from '../lib/security';
 import { Message } from '../lib/store';
+
+/**
+ * An error making the web request.
+ */
+class PostError extends Error {}
+
+/**
+ * An error during the sending process.
+ */
+class SendError extends Error {}
+
+type SendResult = 'OK' | SendError;
 
 function logError(context: string, err?: Error) {
   console.error(`${context} ${err}`);
 }
 
-async function sendMessage(receiverId: string, content: string) {
-  const encryptedContent = await new SenderSecurityContext().encrypt(receiverId, content);
-
-  console.log(`Sending message. To '${receiverId}'. Content: '${content}', encrypted: '${encryptedContent}') `);
-  
-  // TODO: User-friendly error notification. (complicated by react)
+async function postMessage(receiverId: string, encryptedContent: string) {
   const body: Message = {
     receiverId,
     content: encryptedContent,
   };
 
-  let response = null, error = null;
   try {
-    response = await fetch('/api/message', { method: 'POST', body: JSON.stringify(body)});
+    const response = await fetch('/api/message', { method: 'POST', body: JSON.stringify(body)});
+    if (!response.ok) { throw new PostError(`API responded ${response.status}: ${response.statusText}`) }
   } catch (err) {
-    error = err;
+    throw err instanceof PostError ? err : new PostError(`Network, or other unexpected problem.`);
+  }
+}
+
+async function sendMessage(receiverId: string, content: string): Promise<SendResult> {
+  let error = null;
+  try {
+    const encryptedContent = await new SenderSecurityContext().encrypt(receiverId, content);
+    await postMessage(receiverId, encryptedContent);
+  } catch (err) {
+    if (err instanceof EncryptError) {
+      error = new SendError('Problem sending message. Was the correct QR code scanned?');
+    } else if (err instanceof PostError) {
+      error = new SendError('Problem sending message. Please refresh and try again.');
+    } else {
+      error = new SendError('Unexpected problem. Please report this to our team, and we will investigate it as soon as possible.');
+    }
+    logError('Problem sending message.', err as Error);
   }
 
-  if (response && !response.ok) {
-    logError('Problem sending message.', new Error(`API responded with code ${response.status}`));
-  } else if (error) {
-    logError('Problem sending message.', error as Error);
-  }
+  return error ?? 'OK';
 }
 
 type Status = 'WaitingForText' | 'WaitingForQR' | 'HasQR' | 'MessageSent';
@@ -49,8 +69,14 @@ export function SendForm() {
         setNotification(null);
         break;
       case 'HasQR':
-        sendMessage(receiverId, content);
-        setStatus("MessageSent");
+        (async () => {
+          const sendResult = await sendMessage(receiverId, content);
+          if (sendResult === 'OK') {
+            setStatus("MessageSent");
+          } else {
+            setStatus("MessageSent"); // TODO: Pass error info here instead.
+          }
+        })(); 
         break;
       case 'MessageSent':
         setNotification('Message sent!');
