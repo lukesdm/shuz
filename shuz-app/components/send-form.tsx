@@ -59,15 +59,15 @@ async function sendMessage(receiverId: string, content: string): Promise<SendRes
   return error ?? 'OK';
 }
 
-type Status = 'WaitingForText' | 'WaitingForQR' | 'HasQR' | 'MessageSent';
-
-type Notification = 'Message sent!' | null;
+// Status and result of previous operation.
+// COULDDO: refactor to swap nulls with other results where it makes sense, e.g. 'HasQR'.
+type Status = ['WaitingForText', null ] | [ 'WaitingForQR', null ] | [ 'HasQR', null ]  | [ 'MessageSent', SendResult ];
 
 export function SendForm() {
   const [content, setContent] = useState('');
   const [receiverId, setReceiverId] = useState('');
-  const [status, setStatus] = useState('WaitingForText' as Status);
-  const [notification, setNotification] = useState(null as Notification);
+  const [[status, result], setStatus] = useState(['WaitingForText', null ] as Status);
+  const [notification, setNotification] = useState<string | null>(null);
 
   useEffect(() => {
     switch (status) {
@@ -78,24 +78,21 @@ export function SendForm() {
       case 'HasQR':
         (async () => {
           const sendResult = await sendMessage(receiverId, content);
-          if (sendResult === 'OK') {
-            setStatus("MessageSent");
-          } else {
-            setStatus("MessageSent"); // TODO: Pass error info here instead.
-          }
+          setStatus(["MessageSent", sendResult]);
         })(); 
         break;
       case 'MessageSent':
-        setNotification('Message sent!');
-        setStatus("WaitingForText");
+        const notific = result === 'OK' ? 'Message sent!' : `${result!.message}`;
+        setNotification(notific);
+        setStatus(["WaitingForText", null]);
         break;
     }
-  }, [status, notification, receiverId, content]);
+  }, [status, result, notification, receiverId, content]);
 
   const onQrRead: OnResultFunction = (result, error) => {
     if (!!result) {
       setReceiverId(result.getText());
-      setStatus("HasQR");
+      setStatus(["HasQR", null]);
     }
     if (!!error) {
       // ignore these errors for now.
@@ -103,7 +100,7 @@ export function SendForm() {
   }
 
   const onSendClick = () => {
-    setStatus("WaitingForQR");
+    setStatus(["WaitingForQR", null]);
   }
 
   return (
