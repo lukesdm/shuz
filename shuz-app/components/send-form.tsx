@@ -99,7 +99,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function SendForm() {
+export function SendForm(props: { receiverId: string | null }) {
   
   const [state, dispatch] = useReducer(reducer, initState);
 
@@ -136,7 +136,8 @@ export function SendForm() {
           Message:
           <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: e.target.value })} />
         </label>
-        <input type="button" value="Send" name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} />
+        { props.receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: props.receiverId! })}>Send</button>
+          : <input type="button" value={"Scan & Send"} name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} /> }
       </> }
 
       { state.lastAction === 'HandleSend' && <>

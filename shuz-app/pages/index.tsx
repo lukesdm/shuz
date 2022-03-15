@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { Receiver } from '../components/receiver';
@@ -7,8 +7,18 @@ import styles from '../styles/Home.module.css';
 
 type Mode = 'Receive' | 'Send';
 
-const Home: NextPage = () => {
-  const [mode, setMode] = useState('Receive' as Mode);
+type Props = { receiverId: string | null }
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // Capability of getting the receiverId/public key from the query string,
+  // rather than scanning on the page. Use a short param name for QR-encoded size.
+  // COULDDO: Get public key for receiver id here (make a backend call), if they are no longer the same thing.
+  return { props: { receiverId: context.query.s || null } };
+}
+
+// @ts-ignore incorrect typing
+const Home: NextPage = (props: Props) => {
+  const [mode, setMode] = useState(props.receiverId ? 'Send' : 'Receive' as Mode);
   
   return (
     <div className={styles.container}>
@@ -42,7 +52,7 @@ const Home: NextPage = () => {
 
         { (mode === 'Receive') ?
           <Receiver /> :
-          <SendForm />
+          <SendForm receiverId={props.receiverId} />
         }
       
       <p></p> { /* spacing */ }
