@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
 import { EncryptError, SenderSecurityContext } from '../lib/security';
 import { Message } from '../lib/store';
+import { parseReceiverId } from '../lib/urls';
 
 /**
  * An error making the web request.
@@ -23,7 +24,17 @@ class SendError extends Error {
   }
 }
 
-type SendResult = 'OK' | SendError;
+/**
+ * An error whilst reading a QR code.
+ */
+ class QrError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = 'QrError';
+  }
+}
+
+type SendResult = 'OK' | Error;
 
 async function postMessage(receiverId: string, encryptedContent: string) {
   const body: Message = {
@@ -117,13 +128,21 @@ export function SendForm(props: { receiverId: string | null }) {
   }, [state]);
 
   const onQrRead: OnResultFunction = (result, error) => {
-    if (!!result) {
-      dispatch({ type: 'HandleQR', payload: result.getText() });
-    }
-    if (!!error) {
-      // Ignore these errors for now.
-      // TODO: Look into what sort of errors might happen here. E.g. how are multiple QR codes handled?
-    }
+    console.log('reading qr code');
+    
+      if (!!result) {
+        const receiverId = parseReceiverId(result.getText());
+        if (!!receiverId) {
+          dispatch({ type: 'HandleQR', payload: receiverId });
+        } else {
+          // QR is OK but format isn't as expected.
+          dispatch({ type: 'HandleSend', payload: new QrError('Unexpected URL format in QR code.') });
+        }
+      }
+      if (!!error) {
+        // This seems to be triggered whenever no QR is detected i.e. we want to ignore this. 
+        // Perhaps the object has some more useful info we can use for nicer feedback.
+      }
   }
 
   return (
@@ -137,7 +156,7 @@ export function SendForm(props: { receiverId: string | null }) {
           <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: e.target.value })} />
         </label>
         { props.receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: props.receiverId! })}>Send</button>
-          : <input type="button" value={"Scan & Send"} name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} /> }
+          : <input type="button" value={"Scan & Send"} name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} /> } {/* TODO: change this to <button> for consistency */}
       </> }
 
       { state.lastAction === 'HandleSend' && <>

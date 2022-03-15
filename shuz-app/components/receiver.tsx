@@ -6,6 +6,7 @@ import QRCode from 'react-qr-code';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { ReceiverSecurityContext } from '../lib/security';
+import { makeSendToUrl } from '../lib/urls';
 
 const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
 
@@ -40,7 +41,7 @@ function Receiver_() {
         })();
     }, [ securityContext, data ]);
 
-    const qr = receiverId ? <QRCode value={receiverId} size={300} /> : <p>Loading...</p>
+    const qr = receiverId ? <QRCode value={makeSendToUrl(receiverId)} size={300} /> : <p>Loading...</p>
     return !messageContent ? qr : <>
         <article className='message-received'>
             <p className='notification'>{messageContent}</p>

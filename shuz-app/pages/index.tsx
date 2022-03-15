@@ -3,17 +3,21 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { Receiver } from '../components/receiver';
 import { SendForm } from '../components/send-form';
+import { getReceiverIdFromUrl } from '../lib/urls';
 import styles from '../styles/Home.module.css';
 
 type Mode = 'Receive' | 'Send';
 
-type Props = { receiverId: string | null }
+type Props = {
+  receiverId: string | null,
+}
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // Capability of getting the receiverId/public key from the query string,
-  // rather than scanning on the page. Use a short param name for QR-encoded size.
-  // COULDDO: Get public key for receiver id here (make a backend call), if they are no longer the same thing.
-  return { props: { receiverId: context.query.s || null } };
+export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props}>  {
+  
+  // This gives the capability of getting the receiverId/public key from the query string, rather than scanning on the page.
+  // COULDDO: Get public key for receiver id here (make a backend call), if/when they are no longer the same thing.
+  const receiverId = getReceiverIdFromUrl(context);
+  return { props: { receiverId } };
 }
 
 // @ts-ignore incorrect typing
