@@ -25,7 +25,7 @@ const Home: NextPage = (props: Props) => {
   const [mode, setMode] = useState(props.receiverId ? 'Send' : 'Receive' as Mode);
   
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-theme = 'light'>
       <Head>
         <title>shuz.app</title>
         <meta name="description" content="Hello fellow humans" />
