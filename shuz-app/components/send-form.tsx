@@ -80,38 +80,46 @@ function formatSendResult(sendResult: SendResult | null): string {
 
 type ActionType = 'WaitForText' | 'WaitForQR' | 'HandleQR' | 'HandleSend';
 
-type Action = { type: 'WaitForText'; payload: string } // textbox contents updated
+type Action = { type: 'WaitForText'; payload: { content: string; receiverId: string | null } } // textbox contents updated
   | { type: 'WaitForQR'; } // content already updated, no payload needed.
   | { type: 'HandleQR'; payload: string } // QR code.
   | { type: 'HandleSend'; payload: SendResult };
 
-const initState = {
-  lastAction: 'WaitForText' as ActionType,
-  content: null as (string | null),
-  receiverId: null as (string | null),
-  sendResult: null as (SendResult | null)
+type State = {
+  lastAction: ActionType;
+  content: string | null;
+  receiverId: string | null;
+  sendResult: SendResult | null;
+  sendCount: number
 }
 
-type State = typeof initState;
+const initState: State = {
+  lastAction: 'WaitForText',
+  content: null,
+  receiverId: null,
+  sendResult: null,
+  sendCount: 0,
+}
 
 function reducer(state: State, action: Action): State {
   const newState = { ...state, lastAction: action.type };
   switch (action.type) {
     case 'WaitForText':
-      return {...newState, content: action.payload };
+      return {...newState, content: action.payload.content, receiverId: action.payload.receiverId };
     case 'WaitForQR':
       return {...newState };
     case 'HandleQR':
       return {...newState, receiverId: action.payload };
     case 'HandleSend':
-      return {...newState, sendResult: action.payload };
+      const sendResult = action.payload;
+      const newSendCount = sendResult === 'OK' ? newState.sendCount + 1 : newState.sendCount;
+      return {...newState, sendResult, sendCount: newSendCount };
     default:
       throw new Error('Unexpected action type.');
   }
 }
 
-export function SendForm(props: { receiverId: string | null }) {
-  
+export function SendForm(props: { initReceiverId: string | null }) {
   const [state, dispatch] = useReducer(reducer, initState);
 
   useEffect(() => {
@@ -145,6 +153,9 @@ export function SendForm(props: { receiverId: string | null }) {
       }
   }
 
+  // Only use prop for first send.
+  const receiverId = (props.initReceiverId && state.sendCount === 0) ? props.initReceiverId : state.receiverId;
+
   return (
     <form onSubmit={e => e.preventDefault()}>
       { state.lastAction === 'WaitForQR' && <>
@@ -153,9 +164,9 @@ export function SendForm(props: { receiverId: string | null }) {
       { state.lastAction === 'WaitForText' && <>
         <label>
           Message:
-          <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: e.target.value })} />
+          <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: { content: e.target.value, receiverId }})} />
         </label>
-        { props.receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: props.receiverId! })}>Send</button>
+        { receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: receiverId })}>Send</button>
           : <input type="button" value={"Scan & Send"} name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} /> } {/* TODO: change this to <button> for consistency */}
       </> }
 
@@ -167,7 +178,7 @@ export function SendForm(props: { receiverId: string | null }) {
         </> }
         { state.sendResult === 'OK' && <div className='ignore-mq grid'>
           <button onClick={() => dispatch({ type: 'WaitForQR' })}>Resend</button>
-          <button onClick={() => dispatch({ type: 'WaitForText', payload: '' })}>New message</button>
+          <button onClick={() => dispatch({ type: 'WaitForText', payload: {content: '', receiverId: null} })}>New message</button>
         </div>}
       </>}
 

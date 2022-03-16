@@ -56,7 +56,7 @@ const Home: NextPage = (props: Props) => {
 
         { (mode === 'Receive') ?
           <Receiver /> :
-          <SendForm receiverId={props.receiverId} />
+          <SendForm initReceiverId={props.receiverId} />
         }
       
       <p></p> { /* spacing */ }
