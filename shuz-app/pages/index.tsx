@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Receiver } from '../components/receiver';
 import { SendForm } from '../components/send-form';
@@ -9,20 +10,28 @@ import styles from '../styles/Home.module.css';
 type Mode = 'Receive' | 'Send';
 
 type Props = {
-  receiverId: string | null,
+  initReceiverId: string | null,
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props}>  {
   
   // This gives the capability of getting the receiverId/public key from the query string, rather than scanning on the page.
   // COULDDO: Get public key for receiver id here (make a backend call), if/when they are no longer the same thing.
-  const receiverId = getReceiverIdFromUrl(context);
-  return { props: { receiverId } };
+  const initReceiverId = getReceiverIdFromUrl(context);
+  return { props: { initReceiverId } };
 }
 
 // @ts-ignore incorrect typing
 const Home: NextPage = (props: Props) => {
-  const [mode, setMode] = useState(props.receiverId ? 'Send' : 'Receive' as Mode);
+  const [receiverId, setReceiverId] = useState(props.initReceiverId);
+  const [mode, setMode] = useState(props.initReceiverId ? 'Send' : 'Receive' as Mode);
+  const router = useRouter();
+
+  // 'Consume' send-to url.
+  const onSendSuccess = () => {
+    router.push('/', undefined, { shallow: true });
+    setReceiverId(null)
+  };
   
   return (
     <div className={styles.container} data-theme = 'light'>
@@ -56,7 +65,7 @@ const Home: NextPage = (props: Props) => {
 
         { (mode === 'Receive') ?
           <Receiver /> :
-          <SendForm initReceiverId={props.receiverId} />
+          <SendForm initReceiverId={receiverId} onSendSuccess={onSendSuccess} />
         }
       
       <p></p> { /* spacing */ }

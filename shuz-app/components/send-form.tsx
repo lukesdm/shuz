@@ -119,7 +119,8 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function SendForm(props: { initReceiverId: string | null }) {
+export function SendForm(props: { initReceiverId: string | null, onSendSuccess: () => void }) {
+  const { initReceiverId, onSendSuccess } = props;
   const [state, dispatch] = useReducer(reducer, initState);
 
   useEffect(() => {
@@ -130,10 +131,13 @@ export function SendForm(props: { initReceiverId: string | null }) {
         }
 
         const sendResult = await sendMessage(state.receiverId, state.content);
+        if (sendResult === 'OK') {
+          onSendSuccess();
+        }
         dispatch({ type: 'HandleSend', payload: sendResult });
       })();
     }
-  }, [state]);
+  }, [state, onSendSuccess]);
 
   const onQrRead: OnResultFunction = (result, error) => {
     console.log('reading qr code');
@@ -153,8 +157,8 @@ export function SendForm(props: { initReceiverId: string | null }) {
       }
   }
 
-  // Only use prop for first send.
-  const receiverId = (props.initReceiverId && state.sendCount === 0) ? props.initReceiverId : state.receiverId;
+  // Only use prop for first send. (TODO: May be able to remove this if parent's onSendSuccess resets prop ok)
+  const receiverId = (initReceiverId && state.sendCount === 0) ? initReceiverId : state.receiverId;
 
   return (
     <form onSubmit={e => e.preventDefault()}>
