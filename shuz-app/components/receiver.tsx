@@ -63,7 +63,7 @@ function Receiver_() {
 
     const qr =
         <div className='qr-container' id='qr-container' >
-            {receiverId ? <QRCode value={makeSendToUrl(receiverId)} size={INITIAL_QR_SIZE} /> : <p>Loading...</p>}
+            {receiverId ? <article className='qr-quiet-zone'><QRCode value={makeSendToUrl(receiverId)} size={INITIAL_QR_SIZE} /></article> : <p>Loading...</p>}
         </div>
     return !messageContent ? qr : <>
         <article className='message-received'>

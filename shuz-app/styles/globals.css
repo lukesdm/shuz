@@ -40,3 +40,8 @@ article p:last-child {
   /* This will be programatically adjusted so fixed-height content fits rendered container */
   transform: scale(1.0);
 }
+
+.qr-quiet-zone {
+  margin: 16px;
+  padding: 0px;
+}
