@@ -78,19 +78,20 @@ function formatSendResult(sendResult: SendResult | null): string {
   }
 }
 
-type ActionType = 'WaitForText' | 'WaitForQR' | 'HandleQR' | 'HandleSend';
+type ActionType = 'WaitForText' | 'WaitForQR' | 'HandleQR' | 'HandleSend' | 'SendNew';
 
-type Action = { type: 'WaitForText'; payload: { content: string; receiverId: string | null } } // textbox contents updated
+type Action = { type: 'WaitForText'; payload: { content: string; } } // textbox contents updated
   | { type: 'WaitForQR'; } // content already updated, no payload needed.
-  | { type: 'HandleQR'; payload: string } // QR code.
-  | { type: 'HandleSend'; payload: SendResult };
+  | { type: 'HandleQR'; payload: { receiverId: string }}
+  | { type: 'HandleSend'; payload: SendResult }
+  | { type: 'SendNew'
+};
 
 type State = {
   lastAction: ActionType;
   content: string | null;
   receiverId: string | null;
   sendResult: SendResult | null;
-  sendCount: number
 }
 
 const initState: State = {
@@ -98,22 +99,21 @@ const initState: State = {
   content: null,
   receiverId: null,
   sendResult: null,
-  sendCount: 0,
 }
 
 function reducer(state: State, action: Action): State {
   const newState = { ...state, lastAction: action.type };
   switch (action.type) {
     case 'WaitForText':
-      return {...newState, content: action.payload.content, receiverId: action.payload.receiverId };
+      return {...newState, content: action.payload.content };
     case 'WaitForQR':
       return {...newState };
     case 'HandleQR':
-      return {...newState, receiverId: action.payload };
+      return {...newState, receiverId: action.payload.receiverId };
     case 'HandleSend':
-      const sendResult = action.payload;
-      const newSendCount = sendResult === 'OK' ? newState.sendCount + 1 : newState.sendCount;
-      return {...newState, sendResult, sendCount: newSendCount };
+      return {...newState, sendResult: action.payload };
+    case 'SendNew':
+      return {...initState } ;
     default:
       throw new Error('Unexpected action type.');
   }
@@ -145,7 +145,7 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
       if (!!result) {
         const receiverId = parseReceiverId(result.getText());
         if (!!receiverId) {
-          dispatch({ type: 'HandleQR', payload: receiverId });
+          dispatch({ type: 'HandleQR', payload: { receiverId }});
         } else {
           // QR is OK but format isn't as expected.
           dispatch({ type: 'HandleSend', payload: new QrError('Unexpected URL format in QR code.') });
@@ -157,8 +157,8 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
       }
   }
 
-  // Only use prop for first send. (TODO: May be able to remove this if parent's onSendSuccess resets prop ok)
-  const receiverId = (initReceiverId && state.sendCount === 0) ? initReceiverId : state.receiverId;
+  // Parent should set initReceiverId to null via callback after first successful send.
+  const receiverId = initReceiverId ?? state.receiverId;
 
   return (
     <form onSubmit={e => e.preventDefault()}>
@@ -168,9 +168,9 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
       { state.lastAction === 'WaitForText' && <>
         <label>
           Message:
-          <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: { content: e.target.value, receiverId }})} />
+          <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: { content: e.target.value, }})} />
         </label>
-        { receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: receiverId })}>Send</button>
+        { receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: { receiverId }})}>Send</button>
           : <button onClick={() => dispatch({ type: 'WaitForQR' })}>{"Scan & Send"}</button> }
       </> }
 
@@ -182,7 +182,7 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
         </> }
         { state.sendResult === 'OK' && <div className='ignore-mq grid'>
           <button onClick={() => dispatch({ type: 'WaitForQR' })}>Resend</button>
-          <button onClick={() => dispatch({ type: 'WaitForText', payload: {content: '', receiverId: null} })}>New message</button>
+          <button onClick={() => dispatch({ type: 'SendNew' })}>New message</button>
         </div>}
       </>}
 
