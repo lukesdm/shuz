@@ -10,6 +10,9 @@ import { makeSendToUrl } from '../lib/urls';
 
 const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(input, init).then((res) => res.json());
 
+// Should be ok for mobile. Will scale accordingly later.
+const INITIAL_QR_SIZE = 200;
+
 function Receiver_() {
     const serverSide = typeof window === 'undefined';
     if (serverSide) {
@@ -24,6 +27,7 @@ function Receiver_() {
     const { data, error } = useSWR<Message,Error>(receiverId ? `/api/message?${urlParams}` : null, fetcher, { refreshInterval: 1000 });
     const router = useRouter();
 
+    // Generate keypair
     useEffect(() => {
         const newSecurityContext = new ReceiverSecurityContext();
         (async () => {
@@ -31,7 +35,23 @@ function Receiver_() {
             setSecurityContext(newSecurityContext);
         })();
     }, []);
+
+    // Set QR size
+    useEffect(() => {
+        const qrContainer = document.getElementById('qr-container');
+        if (!qrContainer) {
+           return;
+        }
+        // Hacks on hacks. `height` is the initial qr size, but margin:auto is used so to center the content and grow the container to desired size.
+        // Note. This won't scale the QR automatically as window size is adjusted, it's triggered on re-render.
+        const containerHeight = 
+            parseInt(window.getComputedStyle(qrContainer).height) + 2 * parseInt(window.getComputedStyle(qrContainer).marginTop);
+        
+        const scale = containerHeight / INITIAL_QR_SIZE;
+        qrContainer.style.transform = `scale(${scale})`;
+    });
     
+    // Handle message received
     useEffect(() => {
         (async () => {
             if (data?.content) {
@@ -41,7 +61,10 @@ function Receiver_() {
         })();
     }, [ securityContext, data ]);
 
-    const qr = receiverId ? <QRCode value={makeSendToUrl(receiverId)} size={300} /> : <p>Loading...</p>
+    const qr =
+        <div className='qr-container' id='qr-container' >
+            {receiverId ? <QRCode value={makeSendToUrl(receiverId)} size={INITIAL_QR_SIZE} /> : <p>Loading...</p>}
+        </div>
     return !messageContent ? qr : <>
         <article className='message-received'>
             <p className='notification'>{messageContent}</p>

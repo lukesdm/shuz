@@ -21,6 +21,8 @@
 main {
   min-height: 95vh;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 form {
@@ -29,4 +31,12 @@ form {
 
 article p:last-child {
   margin-bottom: 0;
+}
+
+.qr-container {
+  /* Center the contents */
+  margin: auto;
+  
+  /* This will be programatically adjusted so fixed-height content fits rendered container */
+  transform: scale(1.0);
 }
