@@ -167,7 +167,7 @@ export function SendForm(props: { initReceiverId: string | null }) {
           <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: { content: e.target.value, receiverId }})} />
         </label>
         { receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: receiverId })}>Send</button>
-          : <input type="button" value={"Scan & Send"} name="start-send" onClick={() => dispatch({ type: 'WaitForQR' })} /> } {/* TODO: change this to <button> for consistency */}
+          : <button onClick={() => dispatch({ type: 'WaitForQR' })}>{"Scan & Send"}</button> }
       </> }
 
       { state.lastAction === 'HandleSend' && <>
