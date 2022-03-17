@@ -46,7 +46,7 @@ const Home: NextPage = (props: Props) => {
           <h1>shuz.app</h1>
           <h2>{`Share info with ease.`}</h2>
         </hgroup>
-        <p><em>This is an early stage prototype, DO NOT use for sensitive data.</em></p>
+        <p>⚠<em>This is a preview release, DO NOT use for highly-sensitive data.</em></p>
 
         {/* SHOULDDO: refactor into component */}
         <div className='mode-selector'>
