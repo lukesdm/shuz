@@ -37,14 +37,14 @@ const Home: NextPage = (props: Props) => {
     <div className={styles.container} data-theme = 'light'>
       <Head>
         <title>shuz.app</title>
-        <meta name="description" content="Hello fellow humans" />
+        <meta name="description" content="easy close-quarters messaging" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className='container'>
         <hgroup>
           <h1>shuz.app</h1>
-          <h2>{`Share info with ease.`}</h2>
+          <h2>{`easy close-quarters messaging`}</h2>
         </hgroup>
         <p>⚠<em>This is a preview release, DO NOT use for highly-sensitive data.</em></p>
 
