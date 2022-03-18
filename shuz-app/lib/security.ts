@@ -27,8 +27,6 @@ export class ReceiverSecurityContext {
         if (typeof window === 'undefined') {
             throw new Error("This should not be run outside a browser.");
         }
-
-        // TODO: Check for insecure context
     }
 
     async init() {
@@ -85,7 +83,7 @@ export class ReceiverSecurityContext {
 
         const decrypted: ArrayBuffer = await crypto.subtle.decrypt({ name: ALGO_TYPE }, this.#keyPair!.privateKey!, data);
         
-        return new TextDecoder().decode(decrypted); // TODO: Check - do we need to specify UTF-8 here for cross-device compatibility?
+        return new TextDecoder().decode(decrypted);
     }
 }
 
@@ -94,8 +92,6 @@ export class SenderSecurityContext {
         if (typeof window === 'undefined') {
             throw new Error("This should not be run outside a browser.");
         }
-
-        // TODO: Check for insecure context
     }
 
     /**

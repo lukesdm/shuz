@@ -1,4 +1,4 @@
-# Basic redis for dev
+# Pull and start Redis dev server
 
 docker pull redis:latest
 
