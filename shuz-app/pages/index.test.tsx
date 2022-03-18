@@ -7,7 +7,8 @@ function newTest<T>(name: string, expected: T, actual: T) {
 }
 
 const roundTripEncryptionTest = async () => {
-    const messagePlain = 'Hello there! 👍 коньяк';
+    const messagePlain = 'Hello there! 👍';
+    const expectedEncryptedLength = 344;
     const rsc = new ReceiverSecurityContext();
     await rsc.init();
 
@@ -16,7 +17,13 @@ const roundTripEncryptionTest = async () => {
     const ssc = new SenderSecurityContext();
 
     const messageEncrypted = await ssc.encrypt(publicKey, messagePlain);
+    
     console.log(messageEncrypted);
+
+    // Heuristic check
+    if (messageEncrypted.length !== expectedEncryptedLength ) {
+        throw new Error(`Expected encrypted length: '${expectedEncryptedLength}' Actual encrypted length: '${messageEncrypted.length}'`);
+    }
 
     const messageDecrypted = await rsc.decrypt(messageEncrypted);
     
@@ -43,7 +50,7 @@ const HomeTest: NextPage = () => {
         })();
     }, []);
     return <div>
-        { tests.map((t, i) => <p key={i}>{t.name}: expected: {t.expected}, actual: {t.actual}, pass: {t.pass.toString()}</p> ) }
+        { tests.map((t, i) => <p key={i}>{t.name} - Expected: {t.expected}, Actual: {t.actual}, Pass: {t.pass ? '✔' : '❌' }</p> ) }
         { err ? <p>{err.toString()}</p> : null }
     </div>
 }
