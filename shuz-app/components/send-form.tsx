@@ -71,7 +71,7 @@ async function sendMessage(receiverId: string, content: string): Promise<SendRes
 function formatSendResult(sendResult: SendResult | null): string {
   if (sendResult === 'OK') {
     return 'Message sent successfully!';
-  } else if (sendResult instanceof SendError) {
+  } else if (sendResult instanceof Error) {
     return sendResult.message;
   } else {
     return '';
@@ -177,7 +177,7 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
       { state.lastAction === 'HandleSend' && <>
         <p className='notification'>{formatSendResult(state.sendResult)}</p>
 
-        { state.sendResult instanceof SendError && <>
+        { state.sendResult instanceof Error && <>
           <button onClick={() => dispatch({ type: 'WaitForQR' })}>Try again</button>
         </> }
         { state.sendResult === 'OK' && <div className='ignore-mq grid'>
