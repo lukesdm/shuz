@@ -26,4 +26,4 @@ The following environment variables are required:
 
 ## Special Thanks
 
-To @maxaragon and @zhibeksolp, for their testing and ideas 🙏.
+To [@maxaragon](https://github.com/maxaragon) and [@zhibeksolp](https://github.com/zhibeksolp), for their testing and ideas 🙏.
