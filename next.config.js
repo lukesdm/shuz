@@ -29,7 +29,7 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async headers() { return { source: '/:path*',  headers: securityHeaders }},
+  async headers() { return [{ source: '/:path*',  headers: securityHeaders }] },
   reactStrictMode: true,
   env: {
     // REDIS_URL: 'redis://localhost:6379',
