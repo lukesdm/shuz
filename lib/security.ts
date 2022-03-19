@@ -10,7 +10,7 @@ const ALGO_JWK_E = 'AQAB';
 const ALGO_JWK_KTY = 'RSA';
 
 /**
- * An error encrypting content. Usually caused by a malformed public key.
+ * An error encrypting content. Usually caused by a malformed public key, or too large a payload.
  */
 export class EncryptError extends Error {
     constructor() {
@@ -95,9 +95,13 @@ export class SenderSecurityContext {
     }
 
     /**
-     * Encrypts the given text, with the provided public key (base64, 'n' param of an RSA-OAEP-256 JWK), into base64-encoded ciphertext.
-     *  @throws {EncryptError} when content can't be encrypted, usually because of a malformed public key.
+     * Encrypts the given text, with the provided public key, into base64-encoded ciphertext.
+     * @param publicKeyText The public key text (the 'n' param of an RSA-OAEP-256 JWK) - base64 URL encoded.
+     * @param plainText The text to be encrypted. *The maximum length is 190 bytes*.
+     * @returns Base64 encoded cipher text.
+     * @throws {EncryptError} when content can't be encrypted, usually because of a malformed public key OR plainText
      */
+    
     async encrypt(publicKeyText: string, plainText: string): Promise<string> {
         const options = {
             alg: ALGO_JWK_NAME,
