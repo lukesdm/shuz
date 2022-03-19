@@ -22,8 +22,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
   return { props: { initReceiverId } };
 }
 
-// @ts-ignore incorrect typing
-const Home: NextPage = (props: Props) => {
+const Home: NextPage<Props> = (props: Props) => {
   const [receiverId, setReceiverId] = useState(props.initReceiverId);
   const [mode, setMode] = useState(props.initReceiverId ? 'Send' : 'Receive' as Mode);
   const router = useRouter();
@@ -86,4 +85,4 @@ const Home: NextPage = (props: Props) => {
   )
 }
 
-export default Home
+export default Home;
