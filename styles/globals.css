@@ -18,8 +18,6 @@ h3 {
   grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }
 
-
-
 .notification {
   overflow-wrap: break-word;
   font-size: 1.2rem;
@@ -66,4 +64,9 @@ article p:last-child {
 
 .v-align-middle {
   vertical-align: 'middle';
+}
+
+.minor-text {
+  color: var(--muted-color);
+  font-size: 0.9rem;
 }

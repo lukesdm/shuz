@@ -59,7 +59,10 @@ const Home: NextPage<Props> = (props: Props) => {
                 Send
               </button>
             </div>
-            <p>{ mode === 'Receive' ? `Show the QR code below to the sender.` : `Type your message, hit Send below, and scan the recipient's QR code.`}</p>
+            <p>{ mode === 'Receive' ? <>
+              <span>{`Ask the sender to scan the below QR code.`}</span><br/><span className='minor-text'>{`Either with a regular camera app, or through this site.`}</span>
+              </>
+             : `Type your message, hit Send below, and scan the recipient's QR code.`}</p>
           </article>
         </div>
 
