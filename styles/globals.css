@@ -6,14 +6,19 @@ h3 {
   margin-top: 0;
 }
 
-.mode-selector .grid {
-  grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+/* Preferable mobile-desktop transition for grids - half a 1080p screen */
+@media (min-width:958px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+  }
 }
 
 /* Grid ignoring media query (always side-by-side where possible) */
 .ignore-mq.grid {
   grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }
+
+
 
 .notification {
   overflow-wrap: break-word;

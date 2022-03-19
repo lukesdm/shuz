@@ -52,13 +52,13 @@ const Home: NextPage = (props: Props) => {
         {/* SHOULDDO: refactor into component */}
         <div className='mode-selector'>
           <article> {/* just using `article` here because of its pico styles */}
-            <div className='grid'>
-            <button className={ mode === 'Receive' ? '' : 'outline' } onClick = {e => setMode('Receive')}>
-              Receive
-            </button>
-            <button className={ mode === 'Send' ? '' : 'outline' } onClick = {e => setMode('Send')}>
-              Send
-            </button>
+            <div className='ignore-mq grid'>
+              <button className={ mode === 'Receive' ? '' : 'outline' } onClick = {e => setMode('Receive')}>
+                Receive
+              </button>
+              <button className={ mode === 'Send' ? '' : 'outline' } onClick = {e => setMode('Send')}>
+                Send
+              </button>
             </div>
             <p>{ mode === 'Receive' ? `Show the QR code below to the sender.` : `Type your message, hit Send below, and scan the recipient's QR code.`}</p>
           </article>
