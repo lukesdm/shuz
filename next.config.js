@@ -8,11 +8,7 @@ const securityHeaders = [
   },
   {
     key: 'Permissions-Policy',
-    value: 'microphone=(), geolocation=(), interest-cohort=()',
-  },
-  {
-    key: 'X-XSS-Protection',
-    value: '1; mode=block',
+    value: 'microphone=(), geolocation=()',
   },
   {
     key: 'Strict-Transport-Security',
