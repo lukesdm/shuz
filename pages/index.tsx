@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Receiver } from '../components/receiver';
@@ -76,7 +77,11 @@ const Home: NextPage = (props: Props) => {
           <p>© <a href="https://github.com/lukesdm">Luke McQuade</a></p>
           <p><Link href="/about"><a>About</a></Link></p>
           <p><a href="/licenses.txt">Third-party licenses</a></p>
-          <p><a href="https://github.com/lukesdm/shuz">{`Open Source`}</a></p>
+          <p><a href="https://github.com/lukesdm/shuz">
+              {/* eslint-disable-next-line @next/next/no-img-element */ /* Awkward to get the style right with Next Image here, and it's a small file anyway. */}
+              <img src='/github-mark/GitHub-Mark-32px.png' alt='GitHub icon' width={24} height={24} />
+              &nbsp;<span style={{verticalAlign: 'middle'}}>{`Open Source`}</span>
+          </a></p>
       </footer>
     </div>
   )
