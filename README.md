@@ -2,7 +2,7 @@
 Easy close-quarters messaging.
 
 ## Prerequisites
-* Node v14+
+* Node ^14.7.0
 * Redis (any version)
 
 ## Development

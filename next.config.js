@@ -1,10 +1,11 @@
 
 // https://nextjs.org/docs/advanced-features/security-headers
 const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: `default-src 'self'`, // Take care with syntax if updating this.
-  },
+  // CSP is set in _document.tsx, alongside nonce generation
+  // {
+  //   key: 'Content-Security-Policy',
+  //   value: `default-src 'self'`,
+  // },
   {
     key: 'Permissions-Policy',
     value: 'microphone=(), geolocation=(), interest-cohort=()',
