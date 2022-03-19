@@ -24,3 +24,6 @@ The following environment variables are required:
 | --- | --- | --- |
 | REDIS_URL | URL of Redis instance | redis://localhost:6379 | 
 
+## Special Thanks
+
+To @maxaragon and Zhibek S, for their testing and ideas 🙏.

@@ -1,3 +1,11 @@
+h3 {
+  --typography-spacing-vertical: 0.5rem;
+}
+
+.mode-selector article {
+  margin-top: 0;
+}
+
 .mode-selector .grid {
   grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
 }
@@ -37,7 +45,7 @@ article p:last-child {
   /* Center the contents */
   margin: auto;
   
-  /* This will be programatically adjusted so fixed-height content fits rendered container */
+  /* This will be programatically adjusted so fixed-height content fits the rendered container */
   transform: scale(1.0);
 }
 
