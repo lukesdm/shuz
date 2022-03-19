@@ -38,12 +38,23 @@ const handlePost: Handler = async (req, res) => {
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) { 
     try {
         const result = req.method === 'GET' ? await handleGet(req, res) : req.method === 'POST' ? await handlePost(req, res) : { code: 405, data: null };
         res.status(result.code).json(result.data);
     } catch (err) {
         console.error(`Unexpected error: ${err}`);
         res.status(500).json(null);
+    }
+}
+
+// Should be plenty for now, given the max message size. 
+const BODY_SIZE_LIMIT = '2kb';
+
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: BODY_SIZE_LIMIT
+        }
     }
 }
