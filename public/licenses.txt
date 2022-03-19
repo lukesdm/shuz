@@ -24,4 +24,233 @@ SOFTWARE.
 
 -----------------------------------------------------------------------------
 
-TODO: NextJS, React, others
+JavaScript packages
+-------------------
+
+├─ @next/env@12.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/vercel/next.js
+│  ├─ publisher: Next.js Team
+│  ├─ email: support@vercel.com
+│  ├─ path: ~\node_modules\@next\env
+│  └─ licenseFile: ~\node_modules\@next\env\license.md
+├─ @next/swc-win32-x64-msvc@12.1.0
+│  ├─ licenses: MIT
+│  ├─ path: ~\node_modules\@next\swc-win32-x64-msvc
+│  └─ licenseFile: ~\node_modules\@next\swc-win32-x64-msvc\README.md
+├─ @node-redis/bloom@1.0.1
+│  ├─ licenses: MIT
+│  ├─ path: ~\node_modules\@node-redis\bloom
+│  └─ licenseFile: ~\node_modules\@node-redis\bloom\README.md
+├─ @node-redis/client@1.0.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/redis/node-redis
+│  ├─ path: ~\node_modules\@node-redis\client
+│  └─ licenseFile: ~\node_modules\@node-redis\client\README.md
+├─ @node-redis/graph@1.0.0
+│  ├─ licenses: MIT
+│  ├─ path: ~\node_modules\@node-redis\graph
+│  └─ licenseFile: ~\node_modules\@node-redis\graph\README.md
+├─ @node-redis/json@1.0.2
+│  ├─ licenses: MIT
+│  ├─ path: ~\node_modules\@node-redis\json
+│  └─ licenseFile: ~\node_modules\@node-redis\json\README.md
+├─ @node-redis/search@1.0.3
+│  ├─ licenses: MIT
+│  ├─ path: ~\node_modules\@node-redis\search
+│  └─ licenseFile: ~\node_modules\@node-redis\search\README.md
+├─ @node-redis/time-series@1.0.2
+│  ├─ licenses: MIT
+│  ├─ path: ~\node_modules\@node-redis\time-series
+│  └─ licenseFile: ~\node_modules\@node-redis\time-series\README.md
+├─ @zxing/browser@0.0.7
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zxing-js/browser
+│  ├─ path: ~\node_modules\@zxing\browser
+│  └─ licenseFile: ~\node_modules\@zxing\browser\LICENSE
+├─ @zxing/library@0.18.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zxing-js/library
+│  ├─ path: ~\node_modules\@zxing\library
+│  └─ licenseFile: ~\node_modules\@zxing\library\LICENSE
+├─ @zxing/text-encoding@0.9.0
+│  ├─ licenses: (Unlicense OR Apache-2.0)
+│  ├─ repository: https://github.com/zxing-js/text-encoding
+│  ├─ publisher: Joshua Bell
+│  ├─ email: inexorabletash@gmail.com
+│  ├─ path: ~\node_modules\@zxing\text-encoding
+│  └─ licenseFile: ~\node_modules\@zxing\text-encoding\LICENSE.md
+├─ caniuse-lite@1.0.30001313
+│  ├─ licenses: CC-BY-4.0
+│  ├─ repository: https://github.com/browserslist/caniuse-lite
+│  ├─ publisher: Ben Briggs
+│  ├─ email: beneb.info@gmail.com
+│  ├─ url: http://beneb.info
+│  ├─ path: ~\node_modules\caniuse-lite
+│  └─ licenseFile: ~\node_modules\caniuse-lite\LICENSE
+├─ cluster-key-slot@1.1.0
+│  ├─ licenses: Apache*
+│  ├─ repository: https://github.com/Salakar/cluster-key-slot
+│  ├─ publisher: Mike Diarmid
+│  ├─ email: mike.diarmid@gmail.com
+│  ├─ url: http://github.com/Salakar/
+│  ├─ path: ~\node_modules\cluster-key-slot
+│  └─ licenseFile: ~\node_modules\cluster-key-slot\LICENSE
+├─ generic-pool@3.8.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/coopernurse/node-pool
+│  ├─ publisher: James Cooper
+│  ├─ email: james@bitmechanic.com
+│  ├─ path: ~\node_modules\generic-pool
+│  └─ licenseFile: ~\node_modules\generic-pool\README.md
+├─ js-tokens@4.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lydell/js-tokens
+│  ├─ publisher: Simon Lydell
+│  ├─ path: ~\node_modules\js-tokens
+│  └─ licenseFile: ~\node_modules\js-tokens\LICENSE
+├─ loose-envify@1.4.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zertosh/loose-envify
+│  ├─ publisher: Andres Suarez
+│  ├─ email: zertosh@gmail.com
+│  ├─ path: ~\node_modules\loose-envify
+│  └─ licenseFile: ~\node_modules\loose-envify\LICENSE
+├─ nanoid@3.3.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/ai/nanoid
+│  ├─ publisher: Andrey Sitnik
+│  ├─ email: andrey@sitnik.ru
+│  ├─ path: ~\node_modules\nanoid
+│  └─ licenseFile: ~\node_modules\nanoid\LICENSE
+├─ next@12.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/vercel/next.js
+│  ├─ path: ~\node_modules\next
+│  └─ licenseFile: ~\node_modules\next\license.md
+├─ object-assign@4.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/object-assign
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: ~\node_modules\object-assign
+│  └─ licenseFile: ~\node_modules\object-assign\license
+├─ picocolors@1.0.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/alexeyraspopov/picocolors
+│  ├─ publisher: Alexey Raspopov
+│  ├─ path: ~\node_modules\picocolors
+│  └─ licenseFile: ~\node_modules\picocolors\LICENSE
+├─ postcss@8.4.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/postcss/postcss
+│  ├─ publisher: Andrey Sitnik
+│  ├─ email: andrey@sitnik.ru
+│  ├─ path: ~\node_modules\postcss
+│  └─ licenseFile: ~\node_modules\postcss\LICENSE
+├─ prop-types@15.8.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/prop-types
+│  ├─ path: ~\node_modules\prop-types
+│  └─ licenseFile: ~\node_modules\prop-types\LICENSE
+├─ qr.js@0.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/shtylman/qr.js
+│  ├─ publisher: Roman Shtylman
+│  ├─ email: shtylman@gmail.com
+│  ├─ path: ~\node_modules\qr.js
+│  └─ licenseFile: ~\node_modules\qr.js\LICENSE
+├─ react-dom@17.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/react
+│  ├─ path: ~\node_modules\react-dom
+│  └─ licenseFile: ~\node_modules\react-dom\LICENSE
+├─ react-is@16.13.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/react
+│  ├─ path: ~\node_modules\react-is
+│  └─ licenseFile: ~\node_modules\react-is\LICENSE
+├─ react-qr-code@2.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rosskhanas/react-qr-code
+│  ├─ publisher: Ross Khanas
+│  ├─ email: rtkhanas@gmail.com
+│  ├─ path: ~\node_modules\react-qr-code
+│  └─ licenseFile: ~\node_modules\react-qr-code\LICENSE
+├─ react-qr-reader@3.0.0-beta-1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/react-qr-reader/react-qr-reader
+│  ├─ publisher: thomas billiet
+│  ├─ path: ~\node_modules\react-qr-reader
+│  └─ licenseFile: ~\node_modules\react-qr-reader\LICENSE
+├─ react@17.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/react
+│  ├─ path: ~\node_modules\react
+│  └─ licenseFile: ~\node_modules\react\LICENSE
+├─ redis-errors@1.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/NodeRedis/redis-errors
+│  ├─ publisher: Ruben Bridgewater
+│  ├─ path: ~\node_modules\redis-errors
+│  └─ licenseFile: ~\node_modules\redis-errors\LICENSE
+├─ redis-parser@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/NodeRedis/node-redis-parser
+│  ├─ publisher: Ruben Bridgewater
+│  ├─ path: ~\node_modules\redis-parser
+│  └─ licenseFile: ~\node_modules\redis-parser\LICENSE
+├─ redis@4.0.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/redis/node-redis
+│  ├─ path: ~\node_modules\redis
+│  └─ licenseFile: ~\node_modules\redis\LICENSE
+├─ rollup@2.69.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/rollup
+│  ├─ publisher: Rich Harris
+│  ├─ path: ~\node_modules\rollup
+│  └─ licenseFile: ~\node_modules\rollup\LICENSE.md
+├─ scheduler@0.20.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/react
+│  ├─ path: ~\node_modules\scheduler
+│  └─ licenseFile: ~\node_modules\scheduler\LICENSE
+├─ source-map-js@1.0.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/7rulnik/source-map-js
+│  ├─ publisher: Valentin 7rulnik Semirulnik
+│  ├─ email: v7rulnik@gmail.com
+│  ├─ path: ~\node_modules\source-map-js
+│  └─ licenseFile: ~\node_modules\source-map-js\LICENSE
+├─ styled-jsx@5.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/vercel/styled-jsx
+│  ├─ path: ~\node_modules\styled-jsx
+│  └─ licenseFile: ~\node_modules\styled-jsx\license.md
+├─ swr@1.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/vercel/swr
+│  ├─ path: ~\node_modules\swr
+│  └─ licenseFile: ~\node_modules\swr\LICENSE
+├─ ts-custom-error@3.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/adriengibrat/ts-custom-error
+│  ├─ publisher: Adrien Gibrat
+│  ├─ email: adrien.gibrat@gmail.com
+│  ├─ path: ~\node_modules\ts-custom-error
+│  └─ licenseFile: ~\node_modules\ts-custom-error\LICENSE
+├─ use-subscription@1.5.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/react
+│  ├─ path: ~\node_modules\use-subscription
+│  └─ licenseFile: ~\node_modules\use-subscription\LICENSE
+└─ yallist@4.0.0
+   ├─ licenses: ISC
+   ├─ repository: https://github.com/isaacs/yallist
+   ├─ publisher: Isaac Z. Schlueter
+   ├─ email: i@izs.me
+   ├─ url: http://blog.izs.me/
+   ├─ path: ~\node_modules\yallist
+   └─ licenseFile: ~\node_modules\yallist\LICENSE
