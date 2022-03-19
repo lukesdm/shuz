@@ -12,7 +12,7 @@ Easy close-quarters messaging.
 ./dev-redis/dev-start.sh
 
 # Start app dev server
-yarn --cwd shuz-app dev
+yarn dev
 ```
 
 ## Deployment
