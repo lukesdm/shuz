@@ -1,4 +1,4 @@
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
+const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
 // https://nextjs.org/docs/advanced-features/security-headers
 const securityHeaders = [
@@ -36,7 +36,7 @@ const baseConfig = {
   }
 };
 
-module.exports = (phase, { defaultConfig }) => {
+module.exports = (phase, { _defaultConfig }) => {
   return (phase === PHASE_DEVELOPMENT_SERVER) ? baseConfig
   : { 
       ...baseConfig,
