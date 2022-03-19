@@ -40,8 +40,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
     try {
-    const result = req.method === 'GET' ? await handleGet(req, res) : req.method === 'POST' ? await handlePost(req, res) : { code: 405, data: null };
-    res.status(result.code).json(result.data);
+        const result = req.method === 'GET' ? await handleGet(req, res) : req.method === 'POST' ? await handlePost(req, res) : { code: 405, data: null };
+        res.status(result.code).json(result.data);
     } catch (err) {
         console.error(`Unexpected error: ${err}`);
         res.status(500).json(null);
