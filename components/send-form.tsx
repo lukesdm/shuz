@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
 import { EncryptError, SenderSecurityContext } from '../lib/security';
 import { Message } from '../lib/store';
+import { getLengthBytes, MAX_MESSAGE_SIZE } from '../lib/text-utils';
 import { parseReceiverId } from '../lib/urls';
 
 /**
@@ -90,6 +91,7 @@ type Action = { type: 'WaitForText'; payload: { content: string; } } // textbox 
 type State = {
   lastAction: ActionType;
   content: string | null;
+  contentOverflow: number;
   receiverId: string | null;
   sendResult: SendResult | null;
 }
@@ -97,6 +99,7 @@ type State = {
 const initState: State = {
   lastAction: 'WaitForText',
   content: null,
+  contentOverflow: 0,
   receiverId: null,
   sendResult: null,
 }
@@ -105,7 +108,8 @@ function reducer(state: State, action: Action): State {
   const newState = { ...state, lastAction: action.type };
   switch (action.type) {
     case 'WaitForText':
-      return {...newState, content: action.payload.content };
+      const contentOverflow = getLengthBytes(action.payload.content) - MAX_MESSAGE_SIZE;
+      return {...newState, content: action.payload.content, contentOverflow };
     case 'WaitForQR':
       return {...newState };
     case 'HandleQR':
@@ -167,11 +171,11 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
       </> }
       { state.lastAction === 'WaitForText' && <>
         <label>
-          Message:
+          Message: {state.contentOverflow > 0 ? `⚠ Exceeds maximum by ${state.contentOverflow} bytes.` : ''}
           <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: { content: e.target.value, }})} />
         </label>
-        { receiverId ? <button onClick={() => dispatch({ type: 'HandleQR', payload: { receiverId }})}>Send</button>
-          : <button onClick={() => dispatch({ type: 'WaitForQR' })}>{"Scan & Send"}</button> }
+        { receiverId ? <button disabled={state.contentOverflow > 0} onClick={() => dispatch({ type: 'HandleQR', payload: { receiverId }})}>Send</button>
+          : <button disabled={state.contentOverflow > 0} onClick={() => dispatch({ type: 'WaitForQR' })}>{"Scan & Send"}</button> }
       </> }
 
       { state.lastAction === 'HandleSend' && <>
