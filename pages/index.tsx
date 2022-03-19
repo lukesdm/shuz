@@ -72,7 +72,7 @@ const Home: NextPage = (props: Props) => {
       <p></p> { /* spacing */ }
       </main>
 
-      <footer className='container'>
+      <footer className='container grid'>
           <p>© <a href="https://github.com/lukesdm">Luke McQuade</a></p>
           <p><Link href="/about"><a>About</a></Link></p>
           <p><a href="/licenses.txt">Third-party licenses</a></p>

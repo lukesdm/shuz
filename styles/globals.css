@@ -33,6 +33,11 @@ main {
   flex-direction: column;
 }
 
+footer.grid.container {
+  margin: auto;
+  text-align: center;
+}
+
 form {
   text-align: left;
 }
