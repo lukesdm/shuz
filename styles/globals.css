@@ -63,3 +63,7 @@ article p:last-child {
   margin: 0px;
   padding: 16px;
 }
+
+.v-align-middle {
+  vertical-align: 'middle';
+}

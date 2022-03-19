@@ -33,7 +33,7 @@ const About: NextPage = () => {
           <p><a href="https://github.com/lukesdm/shuz">
               {/* eslint-disable-next-line @next/next/no-img-element */ /* Awkward to get the style right with Next Image here, and it's a small file anyway. */}
               <img src='/github-mark/GitHub-Mark-32px.png' alt='GitHub icon' width={24} height={24} />
-              &nbsp;<span style={{verticalAlign: 'middle'}}>{`Open Source`}</span>
+              &nbsp;<span className='v-align-middle'>Open Source</span>
           </a></p>
       </footer>
     </div>
