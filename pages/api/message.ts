@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { MAX_MESSAGE_LENGTH } from '../../lib/app-globals';
 import { sendMessage, Message, getMessage } from '../../lib/store';
 
 type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<{ code: number, data: object | null }>
@@ -48,13 +49,11 @@ export default async function handler(
     }
 }
 
-// Should be plenty for now, given the max message size. 
-const BODY_SIZE_LIMIT = '2kb';
-
 export const config = {
     api: {
         bodyParser: {
-            sizeLimit: BODY_SIZE_LIMIT
+            // Allow 5 bytes per character (encoded)
+            sizeLimit: MAX_MESSAGE_LENGTH * 5
         }
     }
 }

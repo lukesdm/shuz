@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { OnResultFunction, QrReader } from 'react-qr-reader';
+import { MAX_MESSAGE_LENGTH } from '../lib/app-globals';
 import { EncryptError, SenderSecurityContext } from '../lib/security';
 import { Message } from '../lib/store';
-import { getLengthBytes, MAX_MESSAGE_SIZE } from '../lib/text-utils';
 import { parseReceiverId } from '../lib/urls';
 
 /**
@@ -108,7 +108,7 @@ function reducer(state: State, action: Action): State {
   const newState = { ...state, lastAction: action.type };
   switch (action.type) {
     case 'WaitForText':
-      const contentOverflow = getLengthBytes(action.payload.content) - MAX_MESSAGE_SIZE;
+      const contentOverflow = action.payload.content.length - MAX_MESSAGE_LENGTH;
       return {...newState, content: action.payload.content, contentOverflow };
     case 'WaitForQR':
       return {...newState };
@@ -171,7 +171,7 @@ export function SendForm(props: { initReceiverId: string | null, onSendSuccess: 
       </> }
       { state.lastAction === 'WaitForText' && <>
         <label>
-          Message: {state.contentOverflow > 0 ? `⚠ Exceeds maximum by ${state.contentOverflow} bytes.` : ''}
+          Message: {state.contentOverflow > 0 ? `⚠ Exceeds maximum by ${state.contentOverflow} characters.` : ''}
           <textarea name="content" rows={3} placeholder={"Your message...\n\n(From?)"} onChange={e => dispatch({ type: 'WaitForText', payload: { content: e.target.value, }})} />
         </label>
         { receiverId ? <button disabled={state.contentOverflow > 0} onClick={() => dispatch({ type: 'HandleQR', payload: { receiverId }})}>Send</button>

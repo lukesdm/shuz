@@ -30,6 +30,32 @@ const roundTripEncryptionTest = async () => {
     return newTest('Round-trip encryption test', messagePlain, messageDecrypted);
 }
 
+const roundTripLongEncryptionTest = async () => {
+    const messagePlain = 'This is a longer message. It goes for miles 🛤. 0123456789abcdefghijklmnopqrstuvwxyzáéíóú€ 0123456789abcdefghijklmnopqrstuvwxyzáéíóú€ 0123456789abcdefghijklmnopqrstuvwxyzáéíóú€ 0123456789abcdefghijklmnopqrstuvwxyzáéíóú€. 👍';
+    const expectedEncryptedLength = 684;
+    const rsc = new ReceiverSecurityContext();
+    await rsc.init();
+
+    const publicKey = rsc.receiverId;
+
+    const ssc = new SenderSecurityContext();
+
+    const messageEncrypted = await ssc.encrypt(publicKey, messagePlain);
+    
+    console.log(messageEncrypted);
+
+    // Heuristic check
+    if (messageEncrypted.length !== expectedEncryptedLength ) {
+        throw new Error(`Expected encrypted length: '${expectedEncryptedLength}' Actual encrypted length: '${messageEncrypted.length}'`);
+    }
+
+    const messageDecrypted = await rsc.decrypt(messageEncrypted);
+
+    console.log(messageDecrypted.trimEnd());
+    
+    return newTest('Round-trip encryption test', messagePlain, messageDecrypted);
+}
+
 type Test = ReturnType<typeof newTest>;
 
 const HomeTest: NextPage = () => {
@@ -42,6 +68,7 @@ const HomeTest: NextPage = () => {
                 setTests([
                     newTest('Test test', 1, 1),
                     await roundTripEncryptionTest(),
+                    await roundTripLongEncryptionTest(),
                 ]);
             } catch (newErr) {
                 console.error(newErr);
