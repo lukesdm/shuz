@@ -8,8 +8,8 @@ Easy close-quarters messaging.
 ## Development
 
 ```
-# Pull and start Redis dev Docker container
-./dev-redis/dev-start.sh
+# Pull and start Redis Docker container
+./scripts/dev-start.sh
 
 # Start app dev server
 yarn dev
