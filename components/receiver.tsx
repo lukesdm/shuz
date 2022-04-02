@@ -13,6 +13,10 @@ const fetcher = (input: RequestInfo, init: RequestInit | undefined) => fetch(inp
 // Should be ok for mobile. Will scale accordingly later.
 const INITIAL_QR_SIZE = 200;
 
+function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text);
+}
+
 function Receiver_() {
     const serverSide = typeof window === 'undefined';
     if (serverSide) {
@@ -21,6 +25,8 @@ function Receiver_() {
 
     const [ securityContext, setSecurityContext ] = useState(new ReceiverSecurityContext());
     const [ messageContent, setMessageContent ] = useState<string>();
+    const [ hideOnReceive, setHideOnReceive ] = useState<boolean>();
+    const [ copyOnReceive, setCopyOnReceive ] = useState<boolean>();
 
     const receiverId = securityContext.receiverId;
     const urlParams = new URLSearchParams({ receiverId });
@@ -56,18 +62,40 @@ function Receiver_() {
         (async () => {
             if (data?.content) {
                 const newContent = await securityContext.decrypt(data.content);
+                if (copyOnReceive) {
+                    copyToClipboard(newContent);
+                }
                 setMessageContent(newContent);
             }
         })();
-    }, [ securityContext, data ]);
+    }, [ securityContext, data, copyOnReceive ]);
+
 
     const qr =
-        <div className='qr-container' id='qr-container' >
-            {receiverId ? <article className='qr-quiet-zone'><QRCode value={makeSendToUrl(receiverId)} size={INITIAL_QR_SIZE} /></article> : <p>Loading...</p>}
-        </div>
+        <>
+            <div className='qr-container' id='qr-container' >
+                {receiverId ? <article className='qr-quiet-zone'><QRCode value={makeSendToUrl(receiverId)} size={INITIAL_QR_SIZE} /></article> : <p>Loading...</p>}
+            </div>
+            <br />
+            <p>On receive...</p>
+            <div className='ignore-mq grid'>
+            <label>
+                <input type='checkbox' onChange={e => setHideOnReceive(e.target.value == 'on')}/>
+                Hide 🙈
+            </label>
+            <label>
+            <input type='checkbox' onChange={e => setCopyOnReceive(e.target.value == 'on')}/>
+                Copy 📋
+            </label>
+            </div>
+        </>
     return !messageContent ? qr : <>
         <article className='message-received'>
-            <p className='notification'>{messageContent}</p>
+            <p className='notification'>{hideOnReceive ? '••••••••' : messageContent}</p>
+            <div className='ignore-mq grid'>
+                <button onClick={_ => setHideOnReceive(!hideOnReceive)}>{hideOnReceive ? 'Show 👁' : 'Hide 🙈'}</button>
+                <button onClick={_ => copyToClipboard(messageContent)}>Copy 📋</button>
+            </div>
             <button onClick={() => router.reload()}>Receive another?</button>
         </article>
     </>
