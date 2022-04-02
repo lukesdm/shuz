@@ -25,8 +25,7 @@ function Receiver_() {
 
     const [ securityContext, setSecurityContext ] = useState(new ReceiverSecurityContext());
     const [ messageContent, setMessageContent ] = useState<string>();
-    const [ hideOnReceive, setHideOnReceive ] = useState<boolean>();
-    const [ copyOnReceive, setCopyOnReceive ] = useState<boolean>();
+    const [ hideMessage, setHideMessage ] = useState<boolean>();
 
     const receiverId = securityContext.receiverId;
     const urlParams = new URLSearchParams({ receiverId });
@@ -62,13 +61,10 @@ function Receiver_() {
         (async () => {
             if (data?.content) {
                 const newContent = await securityContext.decrypt(data.content);
-                if (copyOnReceive) {
-                    copyToClipboard(newContent);
-                }
                 setMessageContent(newContent);
             }
         })();
-    }, [ securityContext, data, copyOnReceive ]);
+    }, [ securityContext, data ]);
 
 
     const qr =
@@ -80,20 +76,16 @@ function Receiver_() {
             <p>On receive...</p>
             <div className='ignore-mq grid'>
             <label>
-                <input type='checkbox' onChange={e => setHideOnReceive(e.target.value == 'on')}/>
+                <input type='checkbox' onChange={e => setHideMessage(e.target.value == 'on')}/>
                 Hide 🙈
-            </label>
-            <label>
-            <input type='checkbox' onChange={e => setCopyOnReceive(e.target.value == 'on')}/>
-                Copy 📋
             </label>
             </div>
         </>
     return !messageContent ? qr : <>
         <article className='message-received'>
-            <p className='notification'>{hideOnReceive ? '••••••••' : messageContent}</p>
+            <p className='notification'>{hideMessage ? '••••••••' : messageContent}</p>
             <div className='ignore-mq grid'>
-                <button onClick={_ => setHideOnReceive(!hideOnReceive)}>{hideOnReceive ? 'Show 👁' : 'Hide 🙈'}</button>
+                <button onClick={_ => setHideMessage(!hideMessage)}>{hideMessage ? 'Show 👁' : 'Hide 🙈'}</button>
                 <button onClick={_ => copyToClipboard(messageContent)}>Copy 📋</button>
             </div>
             <button onClick={() => router.reload()}>Receive another?</button>
